@@ -1,0 +1,148 @@
+/* === Matches Section === */
+.matches-section {
+  padding: 40px 60px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.matches-section h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+/* === Teams Section === */
+.teams-section {
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.teams-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+/* Team logo hover effect */
+.teams-section img {
+  transition: transform 0.3s ease;
+}
+
+.teams-section img:hover {
+  transform: scale(1.15);
+}
+
+/* === News Section === */
+.news-section {
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.news-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* News card hover effect */
+.news-section a > div {
+  transition: transform 0.3s ease;
+}
+
+.news-section a > div:hover {
+  transform: translateY(-10px);
+}
+
+/* === Team Players Section === */
+.players-section {
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: #f3f4f6;
+}
+
+.players-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Player card hover effect */
+.players-section .player-card {
+  transition: transform 0.3s ease;
+}
+
+.players-section .player-card:hover {
+  transform: translateY(-10px);
+}
+
+/* === Shared / Utility Classes === */
+.game-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.game-card {
+  flex: 1 1 300px;
+  max-width: 360px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+  transform: scale(1.03);
+}
+
+.player-avatar {
+  width: 100%;
+  height: 1000px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.game-card h4 {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.game-card p {
+  margin-top: 5px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* === Modal Styles === */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

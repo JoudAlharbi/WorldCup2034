@@ -1,0 +1,157 @@
+/* AuthStyle.css */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f6f5f7;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .auth-wrapper span {
+    font-weight: 400;
+    color: #6c6c6c;
+    font-size: 14px;
+  }
+  
+  .auth-wrapper h2 {
+    font-weight: 600;
+    font-size: 24px;
+    color: #2d2d2d;
+  }
+  .auth-box {
+    display: flex;
+    width: 800px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  }
+  
+  .form-left, .form-right {
+    width: 50%;
+    padding: 40px;
+  }
+  
+  .form-right {
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form-overlay-text {
+    position: absolute;
+    bottom: 30px;  
+    left: 30px;
+    color: white;
+    text-align: left;
+    max-width: 80%;
+    text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.947);
+  }
+  
+  .form-overlay-text h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  
+  .form-overlay-text p {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    background: #eee;
+    border-radius: 4px;
+  }
+  
+  .Abutton{
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #2E3569;
+    border: 2px solid #2E3569;
+    color: #fcfafa;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  button:hover {
+    background: #F7941D;
+    color: white;
+  }
+  
+
+
+  .social-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #aaa;
+    font-size: 14px;
+  }
+  
+  .social-divider hr {
+    flex: 1;
+    height: 1px;
+    background: #ccc;
+    border: none;
+    margin: 0 10px;
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .social-icons button {
+    flex: 1;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .social-icons img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .login-link {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin-top: 15px;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .login-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 300;
+    font-size: 12px;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }

@@ -1,0 +1,65 @@
+
+  .hero {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    color: white;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 0;
+  }
+  
+  .hero-content-left {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* 👈 Left-aligns the text */
+    padding: 0 4rem;
+    max-width: 800px;
+  }
+  
+  .hero-content-left h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-content-left p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta-button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 24px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background: #f2f2f2;
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(8px);
+    }
+  }
+  
