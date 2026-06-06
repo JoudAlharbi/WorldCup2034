@@ -2,7 +2,7 @@ import React from "react";
 
 const statsData = [
   {
-    number: "%75",
+    number: "75%",
     label: "sustainable stadiums",
     image: `${process.env.PUBLIC_URL}/overview/sustainablestadiums.jpg`
   },

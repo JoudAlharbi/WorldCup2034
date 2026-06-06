@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './AuthStyle.css';
 import { useNavigate } from 'react-router-dom';
 
+const AUTH_API_URL = process.env.REACT_APP_AUTH_API_URL || 'http://localhost/fifa-auth';
+
 function Signup() {
   const [form, setForm] = useState({ fullname: '', email: '', username: '', password: '' });
   const [message, setMessage] = useState('');
@@ -16,7 +18,7 @@ function Signup() {
       const formData = new URLSearchParams();
       Object.entries(form).forEach(([key, value]) => formData.append(key, value));
 
-      const response = await fetch('http://localhost/fifa-auth/signup.php', {
+      const response = await fetch(`${AUTH_API_URL}/signup.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),

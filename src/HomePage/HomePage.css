@@ -71,52 +71,144 @@
   }
   
   .countdown-card {
-    background-color: #1c1f4a;
+    background: radial-gradient(120% 120% at 50% 0%, #232a5c 0%, #1c1f4a 60%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 180px 20px 270px;
+    padding: 120px 24px 210px;
   }
-  
+
+  .countdown-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 10px;
+  }
+
   .countdown-card h2 {
-    font-size: 48px;
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight: 800;
+    letter-spacing: 0.5px;
     margin: 0;
   }
-  
+
   .countdown-card p {
-    font-size: 24px;
-    margin: 8px 0 24px;
+    font-size: 15px;
+    margin: 10px 0 36px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .countdown-boxes {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .box {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #313a73 0%, #232a5c 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 22px 10px 16px;
+    text-align: center;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+    opacity: 0.6;
+  }
+
+  .box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .box-value {
+    display: block;
+    height: 1em;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .box-value-num {
+    display: inline-block;
+    animation: countTick 0.45s ease;
+  }
+
+  @keyframes countTick {
+    0% {
+      opacity: 0;
+      transform: translateY(-55%);
+      filter: blur(1px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .box-label {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.62);
   }
-  
-  .countdown-boxes {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    flex-wrap: wrap;
+
+  @media (max-width: 900px) {
+    .countdown-boxes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 520px;
+    }
   }
-  
-  .box {
-    background-color: #2b3266;
-    padding: 72px 60px;
-    text-align: center;
-    border-radius: 10px;
-    min-width: 130px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 560px) {
+    .countdown-boxes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 360px;
+    }
+
+    .countdown-card {
+      padding: 90px 16px 150px;
+    }
   }
-  
-  .box h3 {
-    font-size: 48px;
-    margin: 0;
-  }
-  
-  .box p {
-    font-size: 20px;
-    margin-top: 8px;
-    text-transform: uppercase;
+
+  @media (prefers-reduced-motion: reduce) {
+    .box,
+    .box-value-num {
+      transition: none;
+      animation: none;
+    }
   }
   
   .countdown-banner-overlay {
