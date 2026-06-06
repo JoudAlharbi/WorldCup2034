@@ -1,110 +1,66 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./hostcities.css";
 
 const cities = [
-  { name: "Riyadh", image: `${process.env.PUBLIC_URL}/cities/riyadh.jpg` },
-  { name: "Jeddah", image: `${process.env.PUBLIC_URL}/cities/jeddah.jpg` },
-  { name: "Abha", image: `${process.env.PUBLIC_URL}/cities/abha.jpg` },
-  { name: "Al Khobar", image: `${process.env.PUBLIC_URL}/cities/alkhobar.jpg` },
-  { name: "Neom", image: `${process.env.PUBLIC_URL}/cities/neom.jpg` },
+  { name: "Riyadh", region: "Riyadh Province", stadiums: 6, image: `${process.env.PUBLIC_URL}/cities/riyadh.jpg` },
+  { name: "Jeddah", region: "Makkah Province", stadiums: 4, image: `${process.env.PUBLIC_URL}/cities/jeddah.jpg` },
+  { name: "Abha", region: "Asir Province", stadiums: 2, image: `${process.env.PUBLIC_URL}/cities/abha.jpg` },
+  { name: "Al Khobar", region: "Eastern Province", stadiums: 2, image: `${process.env.PUBLIC_URL}/cities/alkhobar.jpg` },
+  { name: "Neom", region: "Tabuk Province", stadiums: 2, image: `${process.env.PUBLIC_URL}/cities/neom.jpg` },
 ];
+
+const LocationIcon = () => (
+  <svg className="city-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" />
+  </svg>
+);
 
 const HostCities = () => {
   return (
-    <div style={{ backgroundColor: "#f3f4f6", padding: "3rem 1rem" }}>
-      <h2 style={{ textAlign: "center", fontSize: "1.5rem", fontWeight: "600", marginBottom: "2rem" }}>
-        The official Hosting Cities
-      </h2>
+    <section className="cities">
+      <div className="cities__head">
+        <h2 className="cities__title">Official Host Cities</h2>
+        <p className="cities__subtitle">
+          Discover the cities that will welcome the world in FIFA World Cup 2034
+        </p>
+      </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          gap: "2rem",
-          flexWrap: "wrap"
-        }}
-      >
-        {/* Riyadh Card (Left) */}
-        <Link to="/stadiums/riyadh" style={{ textDecoration: "none", color: "inherit" }}>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: "0.5rem",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              overflow: "hidden",
-              width: "256px",
-              height: "505px",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <img
-              src={cities[0].image}
-              alt={cities[0].name}
-              style={{ width: "100%", height: "440px", objectFit: "cover" }}
-            />
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "center",
-                paddingBottom: "1.25rem",
-                fontWeight: "500",
-                fontSize: "1.125rem",
-              }}
-            >
-              {cities[0].name}
-            </div>
-          </div>
-        </Link>
-
-        {/* Right Side - 2x2 Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1.5rem"
-          }}
-        >
-          {cities.slice(1).map((city, index) => (
-            <Link
-              key={index}
-              to={`/stadiums/${city.name.toLowerCase().replace(/\s+/g, '-')}`}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <div
-                style={{
-                  backgroundColor: "#fff",
-                  borderRadius: "0.5rem",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
-                  width: "240px",
-                  height: "240px",
-                }}
-              >
-                <img
-                  src={city.image}
-                  alt={city.name}
-                  style={{ width: "100%", height: "176px", objectFit: "cover" }}
-                />
-                <div
-                  style={{
-                    padding: "1rem",
-                    fontWeight: "500",
-                    fontSize: "1.125rem",
-                    textAlign: "center",
-                  }}
-                >
-                  {city.name}
+      <div className="cities__grid">
+        {cities.map((city, index) => {
+          const slug = city.name.toLowerCase().replace(/\s+/g, "-");
+          return (
+            <article className="city-card" key={index}>
+              <div className="city-card__media">
+                <img src={city.image} alt={city.name} loading="lazy" />
+                <div className="city-card__overlay">
+                  <h3 className="city-card__name">{city.name}</h3>
+                  <div className="city-card__meta">
+                    <span className="city-card__region">
+                      <LocationIcon />
+                      {city.region}
+                    </span>
+                    {city.stadiums ? (
+                      <span className="city-card__stadiums">
+                        <span className="city-card__dot" />
+                        {city.stadiums} stadiums
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
+
+              <div className="city-card__body">
+                <Link className="city-cta" to={`/stadiums/${slug}`}>
+                  Explore City
+                  <span className="city-cta__arrow">→</span>
+                </Link>
+              </div>
+            </article>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };
 

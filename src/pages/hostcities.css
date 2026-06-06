@@ -1,0 +1,215 @@
+/* === Official Host Cities === */
+.cities {
+  --navy: #1b2559;
+  --gold: #d4af37;
+  background-color: #f8f9fc;
+  padding: 64px clamp(20px, 6vw, 90px);
+}
+
+.cities__head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 44px;
+}
+
+.cities__title {
+  color: var(--navy);
+  font-size: clamp(26px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.cities__title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin: 14px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold), #f0d579);
+}
+
+.cities__subtitle {
+  color: #6b7194;
+  font-size: clamp(14px, 1.6vw, 17px);
+  margin: 14px 0 0;
+}
+
+/* Grid: 3 / 2 / 1 */
+.cities__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Card */
+.city-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(27, 37, 89, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.city-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 26px 50px rgba(27, 37, 89, 0.22);
+}
+
+.city-card__media {
+  position: relative;
+  height: 230px;
+  overflow: hidden;
+}
+
+.city-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s ease;
+}
+
+.city-card:hover .city-card__media img {
+  transform: scale(1.09);
+}
+
+.city-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(11, 16, 40, 0.88) 0%,
+    rgba(11, 16, 40, 0.35) 42%,
+    rgba(11, 16, 40, 0) 68%
+  );
+  transition: background 0.3s ease;
+}
+
+/* Info overlay on the image */
+.city-card__overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 18px 20px;
+  color: #ffffff;
+}
+
+.city-card__name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.city-card:hover .city-card__name {
+  color: var(--gold);
+}
+
+.city-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.city-card__region {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.city-icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  fill: var(--gold);
+}
+
+.city-card__stadiums {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.city-card__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* Body + CTA */
+.city-card__body {
+  padding: 18px 20px 22px;
+  margin-top: auto;
+}
+
+.city-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.2s ease, color 0.25s ease;
+}
+
+.city-cta:hover {
+  background: var(--gold);
+  color: var(--navy);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.city-cta__arrow {
+  transition: transform 0.25s ease;
+}
+
+.city-cta:hover .city-cta__arrow {
+  transform: translateX(3px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cities__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .cities {
+    padding: 48px 18px;
+  }
+  .cities__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city-card,
+  .city-card__media img,
+  .city-cta,
+  .city-cta__arrow {
+    transition: none;
+  }
+}
