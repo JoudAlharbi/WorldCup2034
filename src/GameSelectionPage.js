@@ -1,7 +1,7 @@
 // src/GameSelectionPage.js
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Hero, LeagueCard } from './PlayZone';
+import { Hero } from './PlayZone';
 import './PlayZone.css'; 
 
 function GameCard({ title, description, imgSrc, route }) {

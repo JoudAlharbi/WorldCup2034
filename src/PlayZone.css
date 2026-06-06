@@ -67,7 +67,9 @@ nav ul li.active {
 
 .hero {
   height: 650px;
-  background: url("/stadium.jpg") center/ no-repeat;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   margin-bottom: 0;      /* ✨ prevents gap */
   padding: 0;
   border: none;  

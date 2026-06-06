@@ -63,7 +63,7 @@ const CityStadiums = () => {
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
                 <div style={{ textAlign: "center" }}>
                   <h3 style={{ fontWeight: "bold", fontSize: "1.125rem" }}>{stadium.name}</h3>
-                  <p style={{ marginTop: "0.5rem", color: "#6b7280", fontSize: "0.875rem" }}>📍 {stadium.location}</p>
+                  <p style={{ marginTop: "0.5rem", color: "#6b7280", fontSize: "0.875rem" }}><span role="img" aria-label="location">📍</span> {stadium.location}</p>
                 </div>
                 <Link to={`/stadiums/${normalizedCityName}/${index}`} style={{ marginTop: "1rem", backgroundColor: "#9747FF", color: "white", padding: "0.5rem 1rem", borderRadius: "0.375rem", fontSize: "0.875rem", textDecoration: "none" }}>
                   More Info

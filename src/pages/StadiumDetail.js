@@ -211,7 +211,7 @@ const StadiumDetail = () => {
           <p style={{ fontSize: "1rem", color: "#333", lineHeight: "1.7" }}>
             {stadium.description}
           </p>
-          <p style={{ fontSize: "1rem", color: "#555" }}>📍 {stadium.location}</p>
+          <p style={{ fontSize: "1rem", color: "#555" }}><span role="img" aria-label="location">📍</span> {stadium.location}</p>
           <a
             href={stadium.ticketsLink}
             style={{

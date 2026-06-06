@@ -48,7 +48,7 @@ function Scoreboard({ answers, total, currentTime, completionTime }) {
               ? `Time: ${completionTime} seconds`
               : `Elapsed Time: ${currentTime} seconds`}
           </p>
-          {correct === total && <p className="badge">🏆 Pro Level Unlocked!</p>}
+          {correct === total && <p className="badge"><span role="img" aria-label="trophy">🏆</span> Pro Level Unlocked!</p>}
         </div>
         <div className="rank-card">
           <span>Global Rank</span>
@@ -130,7 +130,7 @@ export default function WhoAmI() {
           background={process.env.PUBLIC_URL + "/whoami.png"}
         />
         <section className="quiz-end">
-          <h2>🎉 Quiz Complete!</h2>
+          <h2><span role="img" aria-label="party">🎉</span> Quiz Complete!</h2>
           <p>Score: {answers.filter(a => a.status === 'correct').length} / {questions.length}</p>
         </section>
         <Scoreboard answers={answers} total={questions.length} currentTime={currentTime} completionTime={completionTime} />
