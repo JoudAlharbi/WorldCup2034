@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2E3569"/>
+      <stop offset="1" stop-color="#1c1f4a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <circle cx="400" cy="200" r="60" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="6"/>
+  <path d="M400 158 l24 18 -9 28 h-30 l-9 -28 z" fill="#ffffff" fill-opacity="0.35"/>
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="#ffffff" fill-opacity="0.7" text-anchor="middle">FIFA World Cup 2034</text>
+</svg>
