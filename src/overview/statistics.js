@@ -1,4 +1,5 @@
 import React from "react";
+import "./statistics.css";
 
 const statsData = [
   {
@@ -40,58 +41,28 @@ const statsData = [
 
 const Statistics = () => {
   return (
-    <div style={{ padding: "3rem 1rem", backgroundColor: "#f4f4f4" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "1.5rem"
-        }}
-      >
-        {statsData.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              backgroundColor: "#e0e0e0",
-              borderRadius: "0.75rem",
-              overflow: "hidden",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            {/* Image section that fills remaining space */}
-            <div style={{ flexGrow: 1 }}>
-              <img
-                src={item.image}
-                alt={item.label}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block"
-                }}
-              />
-            </div>
+    <section className="stats">
+      <div className="stats__head">
+        <h2 className="stats__title">2034 World Cup by the Numbers</h2>
+        <p className="stats__subtitle">
+          Key statistics and milestones for Saudi Arabia's FIFA World Cup 2034
+        </p>
+      </div>
 
-            {/* Fixed-height gray box */}
-            <div
-              style={{
-                height: "120px",
-                padding: "1rem",
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-              }}
-            >
-              <h3 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{item.number}</h3>
-              <p style={{ fontSize: "0.9rem", color: "#555" }}>{item.label}</p>
+      <div className="stats__grid">
+        {statsData.map((item, index) => (
+          <article className="stat-card" key={index}>
+            <div className="stat-card__media">
+              <img src={item.image} alt={item.label} loading="lazy" />
             </div>
-          </div>
+            <div className="stat-card__body">
+              <h3 className="stat-card__number">{item.number}</h3>
+              <p className="stat-card__label">{item.label}</p>
+            </div>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
