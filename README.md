@@ -1,99 +1,110 @@
-# FIFA 2034 Fan Portal App ⚽
+# FIFA World Cup 2034 Interactive Portal ⚽🏆
 
-This is a **fan-made web application** for the FIFA World Cup 2034 hosted in **Saudi Arabia**. The app provides an engaging experience for users to explore host cities, stadiums, match highlights, player information, sustainability initiatives, and more.  
-> Built as part of the **CPIT405 Web Development** course at King Abdulaziz University under the supervision of **Dr. Rania Alhazmi**.
+An interactive web application dedicated to the FIFA World Cup 2034 in Saudi Arabia. The platform provides fans with an immersive experience through live news, host city exploration, match information, sustainability initiatives, and interactive content.
 
-#### Screen Recording of the website:
->https://drive.google.com/file/d/1wAztjgf4PKc4OfIIl2OnXpgz6w_6vkYx/view?usp=drive_link
----
-
-## 🌐  Features
-
-- ⚽ **Live FIFA news** using NewsAPI  
-- 🌌 **Countdown timer** to the World Cup  
-- 🌿 **Sustainability section** about eco-friendly stadiums  
-- 🧠 **Mini-games** (e.g., Who Am I?)  
-- 📸 **Visual and media-rich design**
-
----
-## ⚠️ Prerequisites
-> Make sure you have **Node.js (v16 or v18)** and **npm** installed on your machine.
-
-### 1. To check if you have them installed:
-```bash
-node -v
-npm -v
-```
-If you see version numbers, you're good to go. If not or if the versions are incompatible:
-
-- Download both from: https://nodejs.org/
-
-- Use the LTS version (Recommended)
-
-### 2. Recommended Versions:
-This app works best with:
-- Node.js v16.x.x or v18.x.x
-
-- npm v8.x.x
-> ❗ If you're using a much newer Node.js version (like v20+), some dependencies might break. You can switch versions using nvm:
-```bash
-nvm install 18
-nvm use 18
-```
+🌐 **Live Website:** https://world-cup2034.vercel.app
 
 ---
 
-## ⚒️ Build & Run Instructions
+## ✨ Features
 
-Make sure you have **Node.js** and **npm** installed.
+### 📰 Live FIFA & World Cup News
 
-### 1. Install AMPPS (https://www.ampps.com/downloads)
+* Real-time football and FIFA-related news.
+* Dynamic news cards with images and external article links.
+* Automatic content updates.
 
+### ⏳ World Cup Countdown
 
-### 2. Place the 'fifa-auth' folder in the following directory(macOS):
-    mv ~/Applications/AMPPS/www/
-    
+* Live countdown timer to FIFA World Cup 2034.
+* Responsive design across all devices.
 
-### 3. Your PHP files should now be accessible at:
-    http://localhost/fifa-auth/login.php
-    http://localhost/fifa-auth/signup.php
+### 🏙️ Host Cities & Stadiums
 
-### 4. Start Apache and MySQL using the AMPPS control panel.
+* Explore Saudi Arabia's host cities.
+* Interactive city showcase with modern card layouts.
+* Stadium and location information.
 
-### 5. Clone the repository
+### 📅 Match Schedule
+
+* FIFA-inspired match schedule interface.
+* Group stage and knockout stage visualization.
+* Match venue and timing information.
+
+### 📈 World Cup Statistics
+
+* Key facts and figures about FIFA World Cup 2034.
+* Sustainability, tourism, and infrastructure highlights.
+
+### 🎮 Fan Engagement
+
+* Interactive fan-focused experience.
+* Rich visual design and modern UI elements.
+
+### 📱 Fully Responsive
+
+* Optimized for desktop, tablet, and mobile devices.
+
+---
+
+## 🛠️ Tech Stack
+
+* React.js
+* JavaScript (ES6+)
+* CSS3
+* NewsData API
+* Vercel Deployment
+
+---
+
+## 🚀 Getting Started
+
+### Clone the Repository
 
 ```bash
-git clone https://github.com/WedAbdullh/fifa-fan-app.git
-cd fifa-fan-app 
+git clone https://github.com/JoudAlharbi/worldCup2034.git
+cd worldCup2034
 ```
 
-### 6. Install dependencies
+### Install Dependencies
 
 ```bash
 npm install
 ```
-### 7. Start the app locally
+
+### Run Locally
 
 ```bash
 npm start
 ```
 
-The app will run at:
-http://localhost:3000/
+The application will run on:
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## 👥 Credits
-> 🚀 Proudly built by an amazing team of talented students at KAU!
-- Rama Alguthmi  
-- Wed Abdullah  
-- Taif Alsaadi  
-- Joud Alharbi  
-- Amjad Bajaber
-  
+## 🌍 Deployment
+
+The project is deployed on Vercel:
+
+https://world-cup2034.vercel.app
+
 ---
-## Resources
-- News provided by NewsAPI.org
-- Built using ReactJS
+
+## 👩‍💻 Author
+
+**Joud Alharbi**
+
+Information Technology Student
+King Abdulaziz University
+
+---
+
+## 📄 Disclaimer
+
+This is an educational and fan-made project created for learning and portfolio purposes. It is not affiliated with or endorsed by FIFA.
 
 
