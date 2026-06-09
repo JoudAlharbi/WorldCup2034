@@ -1,0 +1,121 @@
+/* === 2034 World Cup by the Numbers === */
+.stats {
+  background-color: #f8f9fc;
+  padding: 64px clamp(20px, 6vw, 90px);
+}
+
+.stats__head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.stats__title {
+  color: #1b2559;
+  font-size: clamp(26px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.stats__subtitle {
+  color: #6b7194;
+  font-size: clamp(14px, 1.6vw, 17px);
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+
+/* Flex layout so the final (partial) row stays centered and balanced */
+.stats__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+.stat-card {
+  box-sizing: border-box;
+  flex: 0 1 calc(25% - 18px); /* 4 per row */
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(27, 37, 89, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 44px rgba(27, 37, 89, 0.16);
+}
+
+.stat-card__media {
+  height: 180px;
+  overflow: hidden;
+  background: #eef0f7;
+}
+
+.stat-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.stat-card:hover .stat-card__media img {
+  transform: scale(1.08);
+}
+
+.stat-card__body {
+  flex: 1;
+  min-height: 120px;
+  padding: 22px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.stat-card__number {
+  margin: 0;
+  color: #1b2559;
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-card__label {
+  margin: 0;
+  color: #5b6178;
+  font-size: 14px;
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+
+/* Tablet: 2 per row */
+@media (max-width: 900px) {
+  .stat-card {
+    flex: 0 1 calc(50% - 12px);
+  }
+}
+
+/* Mobile: 1 per row */
+@media (max-width: 560px) {
+  .stats {
+    padding: 48px 18px;
+  }
+  .stat-card {
+    flex: 0 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card,
+  .stat-card__media img {
+    transition: none;
+  }
+}

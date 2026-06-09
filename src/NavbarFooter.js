@@ -32,14 +32,6 @@ function Navbar() {
           <Link to="/play-zone" className={`nav-link ${isActive('/play-zone') ? 'active' : ''}`}>Play Zone</Link>
         </li>
       </ul>
-      <div className="auth-buttons">
-        <Link to="/login">
-          <button className="login">Log in</button>
-        </Link>
-        <Link to="/signup">
-          <button className="signup">Sign up</button>
-        </Link>
-      </div>
     </nav>
   );
 }
@@ -55,9 +47,20 @@ function Footer() {
       <img src={process.env.PUBLIC_URL + "/logo.png"} alt="FIFA 2034 Logo" className="footer-logo" />
 
         <div className="footer-columns">
-          {['FAQ', 'Partnership', 'Contact Us'].map((item, idx) => (
+          {[
+            { label: 'FAQ', href: 'https://www.fifa.com/en/tournaments/mens/worldcup/canada-mexico-usa-2026/articles/faq' },
+            { label: 'Partnership', href: 'https://www.fifa.com/en/partners' },
+            { label: 'Contact Us', href: 'mailto:contact@saudi2034.example.com' },
+          ].map((item, idx) => (
             <div key={idx} className="column">
-              <p>{item}</p>
+              <a
+                href={item.href}
+                target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                {item.label}
+              </a>
             </div>
           ))}
         </div>

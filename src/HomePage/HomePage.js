@@ -2,22 +2,40 @@ import React, { useState, useEffect } from "react";
 import "./HomePage.css";
 import FifaNews from "./FifaNews";
 
+const TARGET_DATE = new Date("2034-01-01T00:00:00");
+const EMPTY_COUNTDOWN = { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+function getTimeRemaining(target, now) {
+  if (target <= now) return EMPTY_COUNTDOWN;
+
+  let years = target.getFullYear() - now.getFullYear();
+  let months = target.getMonth() - now.getMonth();
+  let days = target.getDate() - now.getDate();
+  let hours = target.getHours() - now.getHours();
+  let minutes = target.getMinutes() - now.getMinutes();
+  let seconds = target.getSeconds() - now.getSeconds();
+
+  if (seconds < 0) { seconds += 60; minutes -= 1; }
+  if (minutes < 0) { minutes += 60; hours -= 1; }
+  if (hours < 0) { hours += 24; days -= 1; }
+  if (days < 0) {
+    const daysInPrevMonth = new Date(target.getFullYear(), target.getMonth(), 0).getDate();
+    days += daysInPrevMonth;
+    months -= 1;
+  }
+  if (months < 0) { months += 12; years -= 1; }
+
+  return { years, months, days, hours, minutes, seconds };
+}
+
+const pad = (n) => String(n).padStart(2, "0");
+
 function HomePage() {
-  const [timeLeft, setTimeLeft] = useState({ months: 0, days: 0, hours: 0 });
+  const [timeLeft, setTimeLeft] = useState(() => getTimeRemaining(TARGET_DATE, new Date()));
 
   useEffect(() => {
-    const targetDate = new Date("January 1, 2034 00:00:00");
     const updateCountdown = () => {
-      const now = new Date();
-      const total = targetDate - now;
-      const totalHours = Math.floor(total / 1000 / 60 / 60);
-      const totalDays = Math.floor(totalHours / 24);
-      const totalMonths = Math.floor(totalDays / 30);
-      setTimeLeft({
-        months: totalMonths,
-        days: totalDays % 30,
-        hours: totalHours % 24,
-      });
+      setTimeLeft(getTimeRemaining(TARGET_DATE, new Date()));
     };
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
@@ -43,21 +61,27 @@ function HomePage() {
 
       <div className="countdown-wrapper">
         <div id="countdown" className="card countdown-card">
-          <h2>Countdown</h2>
-          <p>to 2034 FIFA World Cup</p>
+          <span className="countdown-eyebrow">FIFA World Cup 2034</span>
+          <h2>Countdown to Kick-Off</h2>
+          <p>Saudi Arabia · 2034</p>
           <div className="countdown-boxes">
-            <div className="box">
-              <h3>{timeLeft.months}</h3>
-              <p>MONTHS</p>
-            </div>
-            <div className="box">
-              <h3>{timeLeft.days}</h3>
-              <p>DAYS</p>
-            </div>
-            <div className="box">
-              <h3>{timeLeft.hours}</h3>
-              <p>HOURS</p>
-            </div>
+            {[
+              { label: "Years", value: timeLeft.years },
+              { label: "Months", value: timeLeft.months },
+              { label: "Days", value: timeLeft.days },
+              { label: "Hours", value: pad(timeLeft.hours) },
+              { label: "Minutes", value: pad(timeLeft.minutes) },
+              { label: "Seconds", value: pad(timeLeft.seconds) },
+            ].map((unit) => (
+              <div className="box" key={unit.label}>
+                <span className="box-value">
+                  <span className="box-value-num" key={unit.value}>
+                    {unit.value}
+                  </span>
+                </span>
+                <span className="box-label">{unit.label}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="countdown-banner-overlay">

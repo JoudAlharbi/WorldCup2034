@@ -1,0 +1,246 @@
+/* === Road to FIFA World Cup 2034 — Timeline === */
+.tl {
+  --tl-gap: clamp(16px, 3vw, 40px);
+  --tl-gold: #c8a24b;
+  --tl-navy: #1b2559;
+  background-color: #f8f9fc;
+  padding: 64px clamp(20px, 6vw, 90px) 72px;
+}
+
+.tl__head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+.tl__title {
+  color: var(--tl-navy);
+  font-size: clamp(26px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.tl__subtitle {
+  color: #6b7194;
+  font-size: clamp(14px, 1.6vw, 17px);
+  margin: 12px 0 0;
+}
+
+/* Track */
+.tl__events {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--tl-gap);
+}
+
+.tl-event {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card */
+.tl-card {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eceef6;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(27, 37, 89, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: bottom center;
+}
+
+.tl-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 46px rgba(27, 37, 89, 0.2);
+}
+
+.tl-card__media {
+  height: 190px;
+  overflow: hidden;
+  background: #eef0f7;
+}
+
+.tl-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.tl-card:hover .tl-card__media img {
+  transform: scale(1.08);
+}
+
+.tl-card__body {
+  padding: 18px 16px 22px;
+  text-align: center;
+}
+
+.tl-card__host {
+  margin: 0;
+  color: var(--tl-navy);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Node + axis */
+.tl-node-wrap {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  margin-top: 26px;
+}
+
+.tl-node {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--tl-navy);
+  border: 4px solid #f8f9fc;
+  box-shadow: 0 0 0 2px var(--tl-navy);
+  z-index: 2;
+}
+
+.tl-year {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: 800;
+  color: var(--tl-navy);
+  font-size: 16px;
+}
+
+/* Connecting line (between nodes) + animated gold progress fill */
+.tl-line {
+  position: absolute;
+  top: 9px; /* node vertical center (22px node / ~middle) */
+  left: 50%;
+  width: calc(100% + var(--tl-gap));
+  height: 4px;
+  background: #d9deec;
+  border-radius: 4px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.tl-line__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #c8a24b, #e9c766);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: tlGrow 0.8s ease forwards;
+}
+
+@keyframes tlGrow {
+  to { transform: scaleX(1); }
+}
+
+/* 2034 highlight */
+.tl-event--future .tl-card {
+  border: 2px solid var(--tl-gold);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 4px rgba(200, 162, 75, 0.18), 0 22px 46px rgba(27, 37, 89, 0.22);
+}
+
+.tl-event--future .tl-card:hover {
+  transform: scale(1.05) translateY(-8px);
+}
+
+.tl-event--future .tl-card__media {
+  height: 230px;
+}
+
+.tl-event--future .tl-node {
+  background: var(--tl-gold);
+  box-shadow: 0 0 0 2px var(--tl-gold), 0 0 14px 2px rgba(200, 162, 75, 0.7);
+  animation: tlPulse 1.8s infinite;
+}
+
+.tl-event--future .tl-year {
+  color: var(--tl-gold);
+}
+
+@keyframes tlPulse {
+  0% { box-shadow: 0 0 0 2px var(--tl-gold), 0 0 0 0 rgba(200, 162, 75, 0.6); }
+  70% { box-shadow: 0 0 0 2px var(--tl-gold), 0 0 0 12px rgba(200, 162, 75, 0); }
+  100% { box-shadow: 0 0 0 2px var(--tl-gold), 0 0 0 0 rgba(200, 162, 75, 0); }
+}
+
+.tl-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c8a24b, #e9c766);
+  color: #1b2559;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(200, 162, 75, 0.4);
+}
+
+/* Tablet / mobile: smooth horizontal swipe, no visible scrollbar */
+@media (max-width: 900px) {
+  .tl__events {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px 4px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .tl__events::-webkit-scrollbar {
+    display: none;
+  }
+  .tl-event {
+    flex: 0 0 46%;
+    scroll-snap-align: center;
+  }
+  .tl-event--future .tl-card {
+    transform: scale(1.02);
+  }
+  .tl-event--future .tl-card:hover {
+    transform: scale(1.02) translateY(-8px);
+  }
+}
+
+@media (max-width: 560px) {
+  .tl-event {
+    flex: 0 0 80%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-card,
+  .tl-card__media img,
+  .tl-line__fill,
+  .tl-event--future .tl-node {
+    transition: none;
+    animation: none;
+  }
+  .tl-line__fill {
+    transform: scaleX(1);
+  }
+}

@@ -12,6 +12,7 @@ import CitiesPage from "./pages/CitiesPage";
 import CityStadiums from "./pages/CityStadiums";
 import StadiumDetail from "./pages/StadiumDetail";
 import AdditionalCityInfo from "./pages/AdditionalCityInfo";
+import ComingSoon from "./pages/ComingSoon";
 import Login from './Signup/Login';
 import Signup from './Signup/Signup';
 //amjad
@@ -35,6 +36,8 @@ function App() {
         <Route path="/play-zone" element={<GameSelectionPage />} />
         <Route path="/leagues" element={<LeagueSelectionPage />} />
         <Route path="/quiz/:leagueName" element={<WhoAmI />} />
+        <Route path="/mcq" element={<ComingSoon title="MCQ Challenge" description="Test your FIFA knowledge with multiple-choice questions." />} />
+        <Route path="/quotes" element={<ComingSoon title="Who Said It" description="Match the famous quote to the football legend who said it." />} />
         <Route path="/teams-and-matches" element={<TeamsAndMatches />} />
         <Route path="/news/:id" element={<NewsDetails />} />
         <Route path="/cities" element={<CitiesPage />} />

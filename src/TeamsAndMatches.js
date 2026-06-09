@@ -3,6 +3,7 @@ import React, { useState } from 'react';import './TeamsAndMatches.css';
 // import { Hero } from './PlayZone';
 import Hero from './components/Hero';
 import { Link } from 'react-router-dom';
+import MatchesSchedule from './matches/MatchesSchedule';
 
 
 function scrollTeams(amount) {
@@ -43,19 +44,8 @@ const closeModal = () => {
       />
 
       {/* Matches Section */}
-      <section id="matches-section" className="matches-section">
-        <h2>Matches Schedule</h2>
-        <div className="game-grid">
-          <div className="game-card">
-            <p>Saudi Arabia vs Portugal - June 12, 2034</p>
-          </div>
-          <div className="game-card">
-            <p>France vs Brazil - June 13, 2034</p>
-          </div>
-          <div className="game-card">
-            <p>Argentina vs Germany - June 14, 2034</p>
-          </div>
-        </div>
+      <section id="matches-section">
+        <MatchesSchedule />
       </section>
 
 
