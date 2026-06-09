@@ -1,99 +1,34 @@
-# FIFA 2034 Fan Portal App ⚽
+# FIFA World Cup 2034 Interactive Portal ⚽🏆
 
-This is a **fan-made web application** for the FIFA World Cup 2034 hosted in **Saudi Arabia**. The app provides an engaging experience for users to explore host cities, stadiums, match highlights, player information, sustainability initiatives, and more.  
-> Built as part of the **CPIT405 Web Development** course at King Abdulaziz University under the supervision of **Dr. Rania Alhazmi**.
+An interactive web platform dedicated to the FIFA World Cup 2034 in Saudi Arabia. The project provides fans with an immersive experience through live football news, host city exploration, match schedules, stadium information, sustainability insights, and engaging visual content.
 
-#### Screen Recording of the website:
->https://drive.google.com/file/d/1wAztjgf4PKc4OfIIl2OnXpgz6w_6vkYx/view?usp=drive_link
----
+🌐 **Live Demo:** https://world-cup2034.vercel.app
 
-## 🌐  Features
+## Features
 
-- ⚽ **Live FIFA news** using NewsAPI  
-- 🌌 **Countdown timer** to the World Cup  
-- 🌿 **Sustainability section** about eco-friendly stadiums  
-- 🧠 **Mini-games** (e.g., Who Am I?)  
-- 📸 **Visual and media-rich design**
+* Live FIFA & football news integration
+* FIFA World Cup 2034 countdown
+* Host cities and stadium exploration
+* Interactive match schedule
+* World Cup timeline
+* Statistics and insights section
+* Responsive design for all devices
+* Modern UI/UX inspired by professional sports platforms
 
----
-## ⚠️ Prerequisites
-> Make sure you have **Node.js (v16 or v18)** and **npm** installed on your machine.
+## Tech Stack
 
-### 1. To check if you have them installed:
-```bash
-node -v
-npm -v
-```
-If you see version numbers, you're good to go. If not or if the versions are incompatible:
+* React.js
+* JavaScript (ES6+)
+* CSS3
+* NewsData API
+* Vercel
 
-- Download both from: https://nodejs.org/
+## Author
 
-- Use the LTS version (Recommended)
+**Joud Alharbi**
 
-### 2. Recommended Versions:
-This app works best with:
-- Node.js v16.x.x or v18.x.x
+Independent Web Developer & IT Graduate
 
-- npm v8.x.x
-> ❗ If you're using a much newer Node.js version (like v20+), some dependencies might break. You can switch versions using nvm:
-```bash
-nvm install 18
-nvm use 18
-```
+## Disclaimer
 
----
-
-## ⚒️ Build & Run Instructions
-
-Make sure you have **Node.js** and **npm** installed.
-
-### 1. Install AMPPS (https://www.ampps.com/downloads)
-
-
-### 2. Place the 'fifa-auth' folder in the following directory(macOS):
-    mv ~/Applications/AMPPS/www/
-    
-
-### 3. Your PHP files should now be accessible at:
-    http://localhost/fifa-auth/login.php
-    http://localhost/fifa-auth/signup.php
-
-### 4. Start Apache and MySQL using the AMPPS control panel.
-
-### 5. Clone the repository
-
-```bash
-git clone https://github.com/WedAbdullh/fifa-fan-app.git
-cd fifa-fan-app 
-```
-
-### 6. Install dependencies
-
-```bash
-npm install
-```
-### 7. Start the app locally
-
-```bash
-npm start
-```
-
-The app will run at:
-http://localhost:3000/
-
----
-
-## 👥 Credits
-> 🚀 Proudly built by an amazing team of talented students at KAU!
-- Rama Alguthmi  
-- Wed Abdullah  
-- Taif Alsaadi  
-- Joud Alharbi  
-- Amjad Bajaber
-  
----
-## Resources
-- News provided by NewsAPI.org
-- Built using ReactJS
-
-
+This is an independent fan-made project created for educational, portfolio, and demonstration purposes. It is not affiliated with, endorsed by, or associated with FIFA.
