@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-06-10T16:43:03.769Z",
+  "ready": [
+    "messi",
+    "ronaldo",
+    "mbappe",
+    "neymar",
+    "salah",
+    "haaland",
+    "rodri",
+    "bernardo",
+    "son",
+    "debruyne",
+    "modric",
+    "bellingham",
+    "pedri",
+    "yamal",
+    "musiala",
+    "wirtz",
+    "osimhen",
+    "leao",
+    "davies",
+    "foden",
+    "kane",
+    "vinicius",
+    "ibrahimovic",
+    "benzema",
+    "neuer",
+    "griezmann",
+    "rice",
+    "saka",
+    "lewandowski"
+  ],
+  "skipped": [
+    "lautaro"
+  ],
+  "reveals": [
+    "eye-reveal",
+    "face-crop",
+    "silhouette",
+    "jersey-reveal",
+    "celebration"
+  ]
+}

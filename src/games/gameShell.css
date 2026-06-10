@@ -1,0 +1,280 @@
+/* Shared FIFA game shell — navy / gold / white */
+.gs {
+  --fifa-navy: #06154a;
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.14);
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --white: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  min-height: 100vh;
+  background: var(--white);
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 64px);
+}
+
+.gs__shell {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.gs__topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.gs__brand h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--fifa-navy);
+}
+
+.gs__brand h1::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 12px;
+  border-radius: 2px;
+}
+
+.gs__brand p {
+  margin: 14px 0 0;
+  max-width: 480px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.gs__tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(6, 21, 74, 0.06);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--fifa-navy);
+}
+
+.gs__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.gs__stat {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+}
+
+.gs__stat span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.gs__stat strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--fifa-navy);
+}
+
+.gs__progress {
+  margin-bottom: 28px;
+}
+
+.gs__progress-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fifa-navy);
+}
+
+.gs__progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #eef0f5;
+  overflow: hidden;
+}
+
+.gs__progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--fifa-navy), #0a2a7a);
+  transition: width 0.3s ease;
+}
+
+.gs__card {
+  padding: clamp(24px, 4vw, 32px);
+  border-radius: 20px;
+  background: linear-gradient(160deg, #ffffff, #f8fafc);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 36px rgba(6, 21, 74, 0.08);
+}
+
+.gs__options {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 24px;
+}
+
+.gs__option {
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--fifa-navy);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gs__option:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 6px 18px rgba(6, 21, 74, 0.08);
+}
+
+.gs__option.is-selected {
+  border-color: var(--fifa-navy);
+  box-shadow: 0 0 0 2px rgba(6, 21, 74, 0.12);
+}
+
+.gs__option.is-correct {
+  border-color: var(--success);
+  background: rgba(22, 163, 74, 0.1);
+}
+
+.gs__option.is-wrong {
+  border-color: var(--error);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.gs__option:disabled {
+  cursor: default;
+}
+
+.gs__explain {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(6, 21, 74, 0.04);
+  border-left: 3px solid var(--gold);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--fifa-navy);
+  text-align: left;
+}
+
+.gs__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gs__btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gs__btn--primary {
+  background: var(--fifa-navy);
+  color: var(--white);
+}
+
+.gs__btn--primary:hover:not(:disabled) {
+  background: #0a1f5c;
+  box-shadow: 0 6px 18px rgba(6, 21, 74, 0.2);
+  color: var(--white);
+  text-decoration: none;
+}
+
+.gs__btn--secondary {
+  background: var(--white);
+  color: var(--fifa-navy);
+  border: 1px solid var(--border);
+}
+
+.gs__btn--secondary:hover {
+  background: #f9fafb;
+  text-decoration: none;
+  color: var(--fifa-navy);
+}
+
+.gs__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gs--complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gs__complete-card {
+  width: min(520px, 100%);
+  padding: clamp(32px, 5vw, 48px);
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(160deg, #ffffff, #f8fafc);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 56px rgba(6, 21, 74, 0.12);
+}
+
+.gs__complete-score {
+  margin: 24px 0 8px;
+  font-size: clamp(40px, 8vw, 56px);
+  font-weight: 800;
+  color: var(--fifa-navy);
+}
+
+.gs__complete-score span {
+  color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .gs__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .gs__actions {
+    flex-direction: column;
+  }
+
+  .gs__btn {
+    width: 100%;
+  }
+}

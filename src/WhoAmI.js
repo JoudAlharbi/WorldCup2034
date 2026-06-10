@@ -1,186 +1,421 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Hero } from './PlayZone';
-import './PlayZone.css';
+import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { createGameSession } from "./whoami/gameSession";
+import {
+  DIFFICULTY_LABELS,
+  LEGACY_DIFFICULTY_MAP,
+  REVEAL_LABELS,
+} from "./whoami/playerPool";
+import { logPerf } from "./whoami/performanceLog";
+import "./whoami/whoAmI.css";
 
-const leagueQuestions = {
-  'Argentine league': [
-    { image: '/players/Argentine_league/AngelDiMaria.jpg', options: ['Di Maria', 'Messi', 'Nicolas'], answer: 'Di Maria' },
-    { image: '/players/Argentine_league/Maradona.jpg', options: ['Maradona', 'Messi', 'Aguero'], answer: 'Maradona' },
-    { image: '/players/Argentine_league/messi.jpg', options: ['Messi', 'Di Maria', 'Aguero'], answer: 'Messi' },
-    { image: '/players/Argentine_league/Nicolas.jpg', options: ['Nicolas', 'Aguero', 'Messi'], answer: 'Nicolas' },
-    { image: '/players/Argentine_league/SergioAguero.jpg', options: ['Aguero', 'Maradona', 'Di Maria'], answer: 'Aguero' },
-  ],
-  'Italian League': [
-    { image: '/players/Italian-League/DanieleDeRossi.jpg', options: ['De Rossi', 'Buffon', 'Brighi'], answer: 'De Rossi' },
-    { image: '/players/Italian-League/GianluigiBuffon.jpg', options: ['Buffon', 'Maldini', 'Totti'], answer: 'Buffon' },
-    { image: '/players/Italian-League/MatteoBrighi.jpg', options: ['Brighi', 'Buffon', 'Maldini'], answer: 'Brighi' },
-    { image: '/players/Italian-League/PaoloMaldini.jpg', options: ['Maldini', 'Brighi', 'Totti'], answer: 'Maldini' },
-    { image: '/players/Italian-League/FrancescoTotti.jpg', options: ['Totti', 'Buffon', 'De Rossi'], answer: 'Totti' },
-  ],
-  'Saudi League': [
-    { image: '/players/Saudi-League/AliAl-Bulaihi.jpg', options: ['Ali Al-Bulaihi', 'Al-Owais', 'Al-Dawsari'], answer: 'Ali Al-Bulaihi' },
-    { image: '/players/Saudi-League/MuhammadAlOwais.jpg', options: ['Al-Owais', 'Al-Faraj', 'Al-Hamdan'], answer: 'Al-Owais' },
-    { image: '/players/Saudi-League/SalemAl-Dosari.jpg', options: ['Al-Dawsari', 'Al-Owais', 'Al-Faraj'], answer: 'Al-Dawsari' },
-    { image: '/players/Saudi-League/SalmanAl-Faraj.jpg', options: ['Al-Faraj', 'Al-Dawsari', 'Al-Hamdan'], answer: 'Al-Faraj' },
-    { image: '/players/Saudi-League/AbdullahAl-Hamdan.jpg', options: ['Al-Hamdan', 'Al-Faraj', 'Al-Owais'], answer: 'Al-Hamdan' },
-  ],
+const VALID_DIFFICULTIES = ["easy", "medium", "hard"];
+
+function getDifficultyFromParam(leagueName) {
+  const raw = decodeURIComponent(leagueName || "").toLowerCase().trim();
+  return LEGACY_DIFFICULTY_MAP[raw] || raw;
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+const ClockIcon = memo(() => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h5v-2h-4V7h-2v6z" />
+  </svg>
+));
+
+const initialGameState = {
+  index: 0,
+  selected: null,
+  answers: [],
+  feedback: null,
+  startTime: Date.now(),
+  currentTime: 0,
+  completionTime: null,
 };
 
-function Scoreboard({ answers, total, currentTime, completionTime }) {
-  const correct = answers.filter(ans => ans.status === 'correct').length;
-
-  return (
-    <section className="scoreboard">
-      <div className="level-section">
-        <div className="progress-side">
-          <span className="progress-label">Your progress</span>
-          <div className="progress-bar">
-            {Array.from({ length: total }).map((_, i) => {
-              const status = answers[i]?.status || 'pending';
-              return <div key={i} className={`progress-segment ${status}`}></div>;
-            })}
-          </div>
-        </div>
-        <div className="time-center">
-          <p className="completion-time">
-            {completionTime !== null
-              ? `Time: ${completionTime} seconds`
-              : `Elapsed Time: ${currentTime} seconds`}
-          </p>
-          {correct === total && <p className="badge"><span role="img" aria-label="trophy">🏆</span> Pro Level Unlocked!</p>}
-        </div>
-        <div className="rank-card">
-          <span>Global Rank</span>
-          <strong>#{Math.max(1, 371 - correct)}</strong>
-        </div>
-      </div>
-    </section>
-  );
+function gameReducer(state, action) {
+  switch (action.type) {
+    case "RESET":
+      return { ...initialGameState, startTime: Date.now() };
+    case "SELECT":
+      return { ...state, selected: action.option };
+    case "SUBMIT":
+      return {
+        ...state,
+        index: state.index + 1,
+        answers: [...state.answers, { selected: action.choice, status: action.status }],
+        selected: null,
+        feedback: null,
+      };
+    case "TICK":
+      return { ...state, currentTime: action.seconds };
+    case "COMPLETE":
+      return { ...state, completionTime: action.seconds };
+    default:
+      return state;
+  }
 }
+
+const LoadingScreen = memo(({ progress, label }) => (
+  <div className="wai wai--loading">
+    <div className="wai__loading-card">
+      <span className="wai__loading-badge">Who Am I?</span>
+      <h2>Preparing your challenge</h2>
+      <p>{label}</p>
+      <div className="wai__loading-track">
+        <div className="wai__loading-fill" style={{ width: `${progress}%` }} />
+      </div>
+    </div>
+  </div>
+));
 
 export default function WhoAmI() {
   const { leagueName } = useParams();
-  const decodedLeague = decodeURIComponent(leagueName);
-  const league = decodedLeague;
-  const questions = leagueQuestions[decodedLeague] || [];
+  const difficulty = useMemo(() => getDifficultyFromParam(leagueName), [leagueName]);
+  const difficultyLabel = DIFFICULTY_LABELS[difficulty] || difficulty;
 
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [answers, setAnswers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [startTime, setStartTime] = useState(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [completionTime, setCompletionTime] = useState(null);
+  const [session, setSession] = useState({ status: "idle", questions: [] });
+  const [game, dispatch] = useReducer(gameReducer, initialGameState);
+  const [hintsRevealed, setHintsRevealed] = useState(0);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [flashFeedback, setFlashFeedback] = useState(null);
 
-  const quizRef = useRef(null);
+  const imgRef = useRef(null);
+  const labelRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+
+  const { index, selected, answers, currentTime, completionTime } = game;
+  const questions = session.questions;
+  const total = questions.length;
   const current = questions[index];
+  const isBooting = session.status === "booting";
+  const isReady = session.status === "ready";
+  const isComplete = isReady && index >= total && total > 0;
 
-  useEffect(() => {
-    const now = Date.now();
-    setStartTime(now);
+  const correctCount = useMemo(
+    () => answers.filter((a) => a.status === "correct").length,
+    [answers]
+  );
+  const currentScore = correctCount * 100;
+  const remaining = Math.max(total - index, 0);
+  const globalRank = Math.max(1, 371 - correctCount);
+  const progressPct = total ? (answers.length / total) * 100 : 0;
+  const accuracy = total ? Math.round((correctCount / total) * 100) : 0;
 
-    const timer = setInterval(() => {
-      setCurrentTime(Math.floor((Date.now() - now) / 1000));
-    }, 1000);
+  const swapImage = useCallback((src, label) => {
+    const img = imgRef.current;
+    if (!img || !src) return;
+    const t0 = performance.now();
+    img.classList.add("wai__player-img--fade");
+    img.src = src;
+    if (labelRef.current && label) labelRef.current.textContent = label;
+    requestAnimationFrame(() => {
+      img.classList.remove("wai__player-img--fade");
+      logPerf("imageSwap", performance.now() - t0);
+    });
+  }, []);
 
-    return () => clearInterval(timer);
+  const bootGame = useCallback(async (level) => {
+    setSession({ status: "booting", questions: [], error: null });
+    setLoadProgress(0);
+    dispatch({ type: "RESET" });
+    setHintsRevealed(0);
+    setFlashFeedback(null);
+    startTimeRef.current = Date.now();
+
+    try {
+      const prepared = await createGameSession(level, setLoadProgress);
+      setSession({ status: "ready", questions: prepared, error: null });
+    } catch (err) {
+      setSession({
+        status: "error",
+        questions: [],
+        error: err?.message || "Unable to load player images",
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (index >= questions.length && startTime) {
-      const endTime = Date.now();
-      setCompletionTime(Math.floor((endTime - startTime) / 1000));
+    if (!VALID_DIFFICULTIES.includes(difficulty)) {
+      setSession({ status: "idle", questions: [] });
+      return undefined;
     }
-  }, [index, startTime, questions.length]);
+    let active = true;
+    bootGame(difficulty).then(() => {
+      if (!active) return;
+    });
+    return () => {
+      active = false;
+    };
+  }, [difficulty, bootGame]);
+
+  useLayoutEffect(() => {
+    if (!isReady || isComplete || !current) return;
+    swapImage(current.cachedSrc, REVEAL_LABELS[current.revealType] || "Player Reveal");
+  }, [index, isReady, isComplete, current, swapImage]);
 
   useEffect(() => {
+    if (!isReady || isComplete) return undefined;
+    const timer = setInterval(() => {
+      dispatch({
+        type: "TICK",
+        seconds: Math.floor((Date.now() - startTimeRef.current) / 1000),
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isReady, isComplete]);
+
+  useEffect(() => {
+    if (isComplete && completionTime === null) {
+      dispatch({
+        type: "COMPLETE",
+        seconds: Math.floor((Date.now() - startTimeRef.current) / 1000),
+      });
+    }
+  }, [isComplete, completionTime]);
+
+  const handleSubmit = useCallback(() => {
+    if (!current || selected == null) return;
+    const t0 = performance.now();
+    const status = selected === current.answer ? "correct" : "wrong";
+    setFlashFeedback({ status, answer: current.answer, selected });
+
+    dispatch({ type: "SUBMIT", status, choice: selected });
+    setHintsRevealed(0);
+    logPerf("questionTransition", performance.now() - t0);
+    setTimeout(() => setFlashFeedback(null), 120);
+  }, [current, selected]);
+
+  const handleSkip = useCallback(() => {
     if (!current) return;
-    setLoading(true);
-    const img = new Image();
-    img.src = process.env.PUBLIC_URL + current.image;
-    img.onload = () => setLoading(false);
+    const t0 = performance.now();
+    dispatch({ type: "SUBMIT", status: "skipped", choice: null });
+    setHintsRevealed(0);
+    logPerf("questionTransition", performance.now() - t0);
   }, [current]);
 
-  const handleSubmit = () => {
-    if (!current) return;
-    const status = selected == null ? 'skipped' : (selected === current.answer ? 'correct' : 'wrong');
-    setAnswers(prev => [...prev, { selected, status }]);
-    setSelected(null);
-    setIndex(prev => prev + 1);
-  };
+  const handlePlayAgain = useCallback(() => {
+    bootGame(difficulty);
+  }, [bootGame, difficulty]);
 
-  const handleSkip = () => {
-    setAnswers(prev => [...prev, { selected: null, status: 'skipped' }]);
-    setSelected(null);
-    setIndex(prev => prev + 1);
-  };
+  const handleRevealHint = useCallback(() => {
+    setHintsRevealed((count) => Math.min(count + 1, 3));
+  }, []);
 
-  const scrollToQuiz = () => {
-    if (quizRef.current) quizRef.current.scrollIntoView({ behavior: 'smooth' });
-  };
+  const getOptionClass = useCallback(
+    (option) => {
+      const classes = ["wai__option"];
+      if (selected === option) classes.push("is-selected");
+      if (flashFeedback && current) {
+        if (option === current.answer) classes.push("is-correct");
+        else if (flashFeedback.selected === option && flashFeedback.status === "wrong") {
+          classes.push("is-wrong");
+        }
+      }
+      return classes.join(" ");
+    },
+    [selected, flashFeedback, current]
+  );
 
-  if (index >= questions.length) {
+  if (!VALID_DIFFICULTIES.includes(difficulty)) {
     return (
-      <div>
-        <Hero
-          headline={`Guess the ${league} Player`}
-          sub=""
-          buttonLabel="Start now!"
-          background={process.env.PUBLIC_URL + "/whoami.png"}
-        />
-        <section className="quiz-end">
-          <h2><span role="img" aria-label="party">🎉</span> Quiz Complete!</h2>
-          <p>Score: {answers.filter(a => a.status === 'correct').length} / {questions.length}</p>
-        </section>
-        <Scoreboard answers={answers} total={questions.length} currentTime={currentTime} completionTime={completionTime} />
+      <div className="wai">
+        <div className="wai__empty">
+          <p>Select a valid difficulty level to begin.</p>
+          <Link to="/games/who-am-i">Choose Difficulty</Link>
+        </div>
       </div>
     );
   }
 
-  if (loading || !current) {
-    return <div className="loading">Loading...</div>;
+  if (session.status === "error") {
+    return (
+      <div className="wai">
+        <div className="wai__empty">
+          <p>{session.error || "Real player photos could not be loaded."}</p>
+          <p style={{ fontSize: 14, color: "#6b7280", marginTop: 8 }}>
+            Run <code>npm run whoami:download</code> and <code>npm run whoami:assets</code> to build the image dataset.
+          </p>
+          <Link to="/games/who-am-i">Choose Difficulty</Link>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div>
-      <Hero
-        headline={`Guess the ${league} Player`}
-        sub=""
-        buttonLabel="Start now!"
-        background={process.env.PUBLIC_URL + "/whoami.png"}
-        onClick={scrollToQuiz}
+  if (isBooting) {
+    return (
+      <LoadingScreen
+        progress={loadProgress}
+        label={`Preloading ${difficultyLabel} portraits…`}
       />
+    );
+  }
 
-      <section className="question-section custom-quiz-style" ref={quizRef}>
-        <h3 className="question-title" style={{ textAlign: 'center' }}>Question {index + 1}</h3>
-        <div className="question-content">
-          <div className="question-left">
-            <h2>Guess Who Am I</h2>
-            <p>Guess the player from the visible part of their face.</p>
-            {current.options.map((opt, i) => (
-              <button
-                key={i}
-                className={`option-button ${selected === opt ? 'selected' : ''}`}
-                onClick={() => setSelected(opt)}
-              >
-                {opt}
-              </button>
-            ))}
-            <div className="action-buttons">
-              <button className="skip" onClick={handleSkip}>Skip</button>
-              <button className="submit" onClick={handleSubmit}>Submit</button>
+  if (isComplete) {
+    return (
+      <div className="wai wai--complete">
+        <div className="wai__complete-card">
+          <span className="wai__complete-badge">Challenge Complete</span>
+          <h2>Great effort!</h2>
+          <div className="wai__final-score">
+            {correctCount} <span>/ {total}</span>
+          </div>
+          <p className="wai__accuracy">{accuracy}% Accuracy</p>
+          <p className="wai__complete-time">
+            Completed in {formatTime(completionTime ?? currentTime)}
+          </p>
+          <div className="wai__complete-rank">
+            Global Rank <strong>#{Math.max(1, 371 - correctCount)}</strong>
+          </div>
+          <div className="wai__complete-actions">
+            <button type="button" className="wai__btn wai__btn--primary" onClick={handlePlayAgain}>
+              Play Again
+            </button>
+            <Link to="/play-zone" className="wai__btn wai__btn--secondary">
+              Return to Games
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!current) return null;
+
+  return (
+    <div className="wai">
+      <div className="wai__shell">
+        <header className="wai__topbar">
+          <div className="wai__brand">
+            <h1>Who Am I?</h1>
+            <p>Guess the football player from the revealed image.</p>
+            <span className="wai__league-tag">{difficultyLabel}</span>
+          </div>
+          <div className="wai__rank">
+            <span>Global Rank</span>
+            <strong>#{globalRank}</strong>
+          </div>
+        </header>
+
+        <div className="wai__stats">
+          <div className="wai__stat">
+            <span>Current Score</span>
+            <strong>{currentScore}</strong>
+          </div>
+          <div className="wai__stat">
+            <span>Correct Answers</span>
+            <strong>{correctCount}</strong>
+          </div>
+          <div className="wai__stat">
+            <span>Remaining Questions</span>
+            <strong>{remaining}</strong>
+          </div>
+        </div>
+
+        <div className="wai__progress">
+          <div className="wai__progress-head">
+            <span className="wai__progress-label">
+              Progress {index + 1} / {total}
+            </span>
+          </div>
+          <div className="wai__progress-track">
+            <div className="wai__progress-fill" style={{ width: `${progressPct}%` }} />
+          </div>
+        </div>
+
+        <div className="wai__game-card">
+          <div className="wai__image-col">
+            <div className="wai__image-card">
+              <img
+                ref={imgRef}
+                className="wai__player-img"
+                src={current.cachedSrc}
+                alt="Mystery football player reveal"
+                decoding="sync"
+                loading="eager"
+                draggable={false}
+              />
+              <span className="wai__image-label" ref={labelRef}>
+                {REVEAL_LABELS[current.revealType] || "Player Reveal"}
+              </span>
             </div>
           </div>
-          <div className="question-right">
-            <div className="image-placeholder">
-              <img src={process.env.PUBLIC_URL + current.image} alt="quiz" />
+
+          <div className="wai__quiz-col">
+            <div className="wai__quiz-meta">
+              <span className="wai__question-num">
+                Question {index + 1} of {total}
+              </span>
+              <span className="wai__timer">
+                <ClockIcon />
+                {formatTime(currentTime)}
+              </span>
+            </div>
+
+            <div className="wai__hints">
+              <button
+                type="button"
+                className="wai__hint-btn"
+                onClick={handleRevealHint}
+                disabled={hintsRevealed >= 3}
+              >
+                Reveal Hint ({hintsRevealed}/3)
+              </button>
+              {hintsRevealed > 0 && (
+                <ul className="wai__hint-list">
+                  {hintsRevealed >= 1 && (
+                    <li>
+                      <span>National team</span> {current.hints.nationality}
+                    </li>
+                  )}
+                  {hintsRevealed >= 2 && (
+                    <li>
+                      <span>Club</span> {current.hints.club}
+                    </li>
+                  )}
+                  {hintsRevealed >= 3 && (
+                    <li>
+                      <span>Position</span> {current.hints.position}
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+
+            <div className="wai__options">
+              {current.options.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={getOptionClass(option)}
+                  onClick={() => dispatch({ type: "SELECT", option })}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+
+            <div className="wai__actions">
+              <button type="button" className="wai__btn wai__btn--secondary" onClick={handleSkip}>
+                Skip Question
+              </button>
+              <button
+                type="button"
+                className="wai__btn wai__btn--primary"
+                onClick={handleSubmit}
+                disabled={selected == null}
+              >
+                Submit Answer
+              </button>
             </div>
           </div>
         </div>
-      </section>
-
-      <Scoreboard answers={answers} total={questions.length} currentTime={currentTime} completionTime={completionTime} />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,60 @@
+[
+  { "id": "messi", "wikiTitle": "Lionel Messi" },
+  { "id": "ronaldo", "wikiTitle": "Cristiano Ronaldo" },
+  { "id": "mbappe", "wikiTitle": "Kylian Mbappé" },
+  { "id": "neymar", "wikiTitle": "Neymar" },
+  { "id": "salah", "wikiTitle": "Mohamed Salah" },
+  { "id": "haaland", "wikiTitle": "Erling Haaland" },
+  { "id": "rodri", "wikiTitle": "Rodri (footballer, born 1996)" },
+  { "id": "bernardo", "wikiTitle": "Bernardo Silva" },
+  {
+    "id": "lautaro",
+    "wikiTitle": "Lautaro Martínez",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Lautaro_Martinez_ARGENTINA_VS_VENEZUELA_2017.jpg/330px-Lautaro_Martinez_ARGENTINA_VS_VENEZUELA_2017.jpg"
+  },
+  { "id": "son", "wikiTitle": "Son Heung-min" },
+  {
+    "id": "debruyne",
+    "wikiTitle": "Kevin De Bruyne",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_%28cropped%29.jpg/330px-Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_%28cropped%29.jpg"
+  },
+  { "id": "modric", "wikiTitle": "Luka Modrić" },
+  { "id": "bellingham", "wikiTitle": "Jude Bellingham" },
+  { "id": "pedri", "wikiTitle": "Pedri" },
+  { "id": "yamal", "wikiTitle": "Lamine Yamal" },
+  { "id": "musiala", "wikiTitle": "Jamal Musiala" },
+  { "id": "wirtz", "wikiTitle": "Florian Wirtz" },
+  { "id": "osimhen", "wikiTitle": "Victor Osimhen" },
+  { "id": "leao", "wikiTitle": "Rafael Leão" },
+  {
+    "id": "davies",
+    "wikiTitle": "Alphonso Davies",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Alphonso_Davies_in_2022.jpg/330px-Alphonso_Davies_in_2022.jpg"
+  },
+  {
+    "id": "foden",
+    "wikiTitle": "Phil Foden",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg/330px-2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg"
+  },
+  { "id": "kane", "wikiTitle": "Harry Kane" },
+  { "id": "vinicius", "wikiTitle": "Vinícius Júnior" },
+  { "id": "ibrahimovic", "wikiTitle": "Zlatan Ibrahimović" },
+  {
+    "id": "benzema",
+    "wikiTitle": "Karim Benzema",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Karim_Benzema_Pick.jpg/330px-Karim_Benzema_Pick.jpg"
+  },
+  {
+    "id": "neuer",
+    "wikiTitle": "Manuel Neuer",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/20180602_FIFA_Friendly_Match_Austria_vs._Germany_Manuel_Neuer_850_0723.jpg/330px-20180602_FIFA_Friendly_Match_Austria_vs._Germany_Manuel_Neuer_850_0723.jpg"
+  },
+  { "id": "griezmann", "wikiTitle": "Antoine Griezmann" },
+  { "id": "rice", "wikiTitle": "Declan Rice" },
+  {
+    "id": "saka",
+    "wikiTitle": "Bukayo Saka",
+    "directUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/1_bukayo_saka_arsenal_2025_%28cropped%29.jpg/330px-1_bukayo_saka_arsenal_2025_%28cropped%29.jpg"
+  },
+  { "id": "lewandowski", "wikiTitle": "Robert Lewandowski" }
+]

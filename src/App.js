@@ -5,6 +5,11 @@ import { Routes, Route } from 'react-router-dom';
 import GameSelectionPage from './GameSelectionPage';
 import LeagueSelectionPage from './LeagueSelectionPage';
 import WhoAmI from './WhoAmI';
+import WhoAmIHub from './games/whoami/WhoAmIHub';
+import McqHub from './games/mcq/McqHub';
+import McqGame from './games/mcq/McqGame';
+import QuotesHub from './games/quotes/QuotesHub';
+import QuotesGame from './games/quotes/QuotesGame';
 import TeamsAndMatches from './TeamsAndMatches';
 import NewsDetails from './pages/NewsDetails';
 import Layout from './Layout';
@@ -12,7 +17,6 @@ import CitiesPage from "./pages/CitiesPage";
 import CityStadiums from "./pages/CityStadiums";
 import StadiumDetail from "./pages/StadiumDetail";
 import AdditionalCityInfo from "./pages/AdditionalCityInfo";
-import ComingSoon from "./pages/ComingSoon";
 import Login from './Signup/Login';
 import Signup from './Signup/Signup';
 //amjad
@@ -35,9 +39,14 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/play-zone" element={<GameSelectionPage />} />
         <Route path="/leagues" element={<LeagueSelectionPage />} />
+        <Route path="/games/who-am-i" element={<WhoAmIHub />} />
         <Route path="/quiz/:leagueName" element={<WhoAmI />} />
-        <Route path="/mcq" element={<ComingSoon title="MCQ Challenge" description="Test your FIFA knowledge with multiple-choice questions." />} />
-        <Route path="/quotes" element={<ComingSoon title="Who Said It" description="Match the famous quote to the football legend who said it." />} />
+        <Route path="/games/mcq" element={<McqHub />} />
+        <Route path="/games/mcq/:difficulty" element={<McqGame />} />
+        <Route path="/mcq" element={<McqHub />} />
+        <Route path="/games/quotes" element={<QuotesHub />} />
+        <Route path="/games/quotes/:difficulty" element={<QuotesGame />} />
+        <Route path="/quotes" element={<QuotesHub />} />
         <Route path="/teams-and-matches" element={<TeamsAndMatches />} />
         <Route path="/news/:id" element={<NewsDetails />} />
         <Route path="/cities" element={<CitiesPage />} />

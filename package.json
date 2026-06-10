@@ -18,7 +18,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "whoami:download": "node scripts/download-player-images.js",
+    "whoami:assets": "node scripts/generate-whoami-assets.js",
+    "whoami:validate": "node scripts/validate-whoami-images.js",
+    "whoami:setup": "npm run whoami:download && npm run whoami:assets && npm run whoami:validate"
   },
   "eslintConfig": {
     "extends": [
@@ -37,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

@@ -1,69 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  NEWS_PLACEHOLDER,
+  NEWS_REFRESH_MS,
+  fetchFootballNews,
+  formatRelativePublished,
+  hasNewsApiKey,
+} from '../news/newsService';
 import './HomePage.css';
 
-const API_KEY = process.env.REACT_APP_NEWSDATA_API_KEY;
-const PLACEHOLDER = `${process.env.PUBLIC_URL}/HomePage/placeholder.svg`;
-const REFRESH_MS = 30 * 60 * 1000;
-const QUERY = '"World Cup 2034" OR "FIFA World Cup" OR "Saudi Arabia 2034" OR "football tournament"';
-
-function formatDate(value) {
-  if (!value) return '';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
-}
-
-function normalize(item) {
-  return {
-    title: item.title,
-    description: item.description,
-    url: item.link,
-    image: item.image_url || null,
-    source: item.source_id || 'News',
-    publishedAt: item.pubDate || null,
-  };
-}
-
 const onImgError = (e) => {
-  if (e.target.src !== PLACEHOLDER) e.target.src = PLACEHOLDER;
+  if (e.target.src !== NEWS_PLACEHOLDER) e.target.src = NEWS_PLACEHOLDER;
 };
 
 function FifaNews() {
   const [articles, setArticles] = useState([]);
-  const [status, setStatus] = useState(API_KEY ? 'loading' : 'no-key'); // loading | ready | empty | error | no-key
+  const [status, setStatus] = useState(hasNewsApiKey() ? 'loading' : 'no-key');
 
-  const loadNews = () => {
-    if (!API_KEY) {
+  const loadNews = useCallback((silent = false) => {
+    if (!hasNewsApiKey()) {
       setStatus('no-key');
       return;
     }
-    setStatus((prev) => (prev === 'ready' ? prev : 'loading'));
+    if (!silent) {
+      setStatus((prev) => (prev === 'ready' ? prev : 'loading'));
+    }
 
-    const url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&language=en&q=${encodeURIComponent(QUERY)}`;
-
-    fetch(url)
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('bad response'))))
-      .then((data) => {
-        const results = Array.isArray(data.results) ? data.results : [];
-        const list = results.map(normalize).filter((a) => a.title).slice(0, 5);
+    fetchFootballNews(5)
+      .then((list) => {
         setArticles(list);
         setStatus(list.length ? 'ready' : 'empty');
       })
       .catch((err) => {
         console.error('News fetch error:', err);
-        setStatus('error');
+        if (err.message === 'no-key') {
+          setStatus('no-key');
+        } else {
+          setStatus((prev) => (prev === 'ready' ? prev : 'error'));
+        }
       });
-  };
+  }, []);
 
   useEffect(() => {
     loadNews();
-    const id = setInterval(loadNews, REFRESH_MS);
+    const id = setInterval(() => loadNews(true), NEWS_REFRESH_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [loadNews]);
 
   const featured = articles[0];
   const secondary = articles.slice(1, 5);
@@ -113,7 +94,7 @@ function FifaNews() {
           <div className="fn-state__icon">⚽</div>
           <h3>Live FIFA news will appear here shortly</h3>
           <p>We're refreshing the latest stories. Please check back in a moment.</p>
-          <button className="fn-readmore" onClick={loadNews}>Refresh</button>
+          <button className="fn-readmore" onClick={() => loadNews()}>Refresh</button>
         </div>
       )}
 
@@ -122,12 +103,14 @@ function FifaNews() {
           {featured && (
             <article className="fn-card fn-featured">
               <div className="fn-media">
-                <img src={featured.image || PLACEHOLDER} alt={featured.title} onError={onImgError} loading="lazy" />
+                <img src={featured.image || NEWS_PLACEHOLDER} alt={featured.title} onError={onImgError} loading="lazy" />
               </div>
               <div className="fn-body">
                 <div className="fn-meta">
                   <span className="fn-source">{featured.source}</span>
-                  {formatDate(featured.publishedAt) && <span className="fn-date">{formatDate(featured.publishedAt)}</span>}
+                  {formatRelativePublished(featured.publishedAt) && (
+                    <span className="fn-date">{formatRelativePublished(featured.publishedAt)}</span>
+                  )}
                 </div>
                 <h3 className="fn-title fn-clamp-2">{featured.title}</h3>
                 <p className="fn-desc fn-clamp-3">{featured.description || 'Read the full story for more details.'}</p>
@@ -144,12 +127,14 @@ function FifaNews() {
             {secondary.map((item, index) => (
               <article className="fn-card fn-mini" key={index}>
                 <div className="fn-media">
-                  <img src={item.image || PLACEHOLDER} alt={item.title} onError={onImgError} loading="lazy" />
+                  <img src={item.image || NEWS_PLACEHOLDER} alt={item.title} onError={onImgError} loading="lazy" />
                 </div>
                 <div className="fn-body">
                   <div className="fn-meta">
                     <span className="fn-source">{item.source}</span>
-                    {formatDate(item.publishedAt) && <span className="fn-date">{formatDate(item.publishedAt)}</span>}
+                    {formatRelativePublished(item.publishedAt) && (
+                      <span className="fn-date">{formatRelativePublished(item.publishedAt)}</span>
+                    )}
                   </div>
                   <h4 className="fn-title fn-clamp-2">{item.title}</h4>
                   <p className="fn-desc fn-clamp-2">{item.description || ''}</p>

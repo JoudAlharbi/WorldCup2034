@@ -1,0 +1,457 @@
+/* Games Hub — premium FIFA fan portal landing */
+
+.gh {
+  --navy: #06154a;
+  --navy-mid: #0a2a7a;
+  --gold: #d4af37;
+  --gold-light: #e8d48a;
+  --gold-soft: rgba(212, 175, 55, 0.12);
+  --text: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --surface: #ffffff;
+  --radius: 16px;
+  background: #f8f9fc;
+  min-height: 100vh;
+}
+
+/* ── Compact hero (~50% shorter) ── */
+
+.gh-hero {
+  position: relative;
+  min-height: clamp(168px, 22vh, 220px);
+  background-color: var(--navy);
+  background-size: cover;
+  background-position: center 40%;
+  overflow: hidden;
+}
+
+.gh-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(6, 21, 74, 0.94) 0%,
+    rgba(6, 21, 74, 0.82) 45%,
+    rgba(10, 42, 122, 0.72) 100%
+  );
+}
+
+.gh-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 40px) clamp(20px, 4vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 48px);
+}
+
+.gh-hero__copy {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.gh-hero__eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.gh-hero h1 {
+  margin: 0;
+  font-size: clamp(24px, 3.2vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.gh-hero__copy p {
+  margin: 10px 0 0;
+  max-width: 420px;
+  font-size: clamp(14px, 1.6vw, 15px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gh-hero__metrics {
+  display: flex;
+  gap: clamp(12px, 2vw, 20px);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.gh-hero__metrics div {
+  min-width: 88px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.gh-hero__metrics dt {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gh-hero__metrics dd {
+  margin: 6px 0 0;
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+/* ── Main section ── */
+
+.gh-main {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(36px, 5vw, 52px) clamp(20px, 4vw, 40px) clamp(48px, 6vw, 72px);
+}
+
+.gh-main__head {
+  margin-bottom: clamp(28px, 4vw, 36px);
+}
+
+.gh-main__head h2 {
+  margin: 0;
+  font-size: clamp(22px, 2.8vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--navy);
+}
+
+.gh-main__head h2::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+.gh-main__head p {
+  margin: 14px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.gh-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.5vw, 24px);
+  align-items: stretch;
+}
+
+/* ── Premium game card ── */
+
+.gh-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 2px rgba(6, 21, 74, 0.04),
+    0 8px 24px rgba(6, 21, 74, 0.06);
+  overflow: hidden;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s ease;
+}
+
+.gh-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow:
+    0 4px 8px rgba(6, 21, 74, 0.06),
+    0 20px 48px rgba(6, 21, 74, 0.12);
+}
+
+.gh-card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+.gh-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gh-card:hover .gh-card__media img {
+  transform: scale(1.04);
+}
+
+.gh-card__media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 21, 74, 0.08) 0%,
+    rgba(6, 21, 74, 0.02) 40%,
+    rgba(6, 21, 74, 0.55) 100%
+  );
+  pointer-events: none;
+}
+
+.gh-card__icon-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gh-card__icon-badge svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gh-card__icon-badge--gold {
+  background: rgba(212, 175, 55, 0.92);
+  color: var(--navy);
+}
+
+.gh-card__icon-badge--navy {
+  background: rgba(6, 21, 74, 0.88);
+  color: var(--gold);
+}
+
+.gh-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px 22px 22px;
+}
+
+.gh-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.gh-card__title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+
+.gh-card__title-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.gh-card__title-icon--gold {
+  background: var(--gold-soft);
+  color: #9a7d1e;
+}
+
+.gh-card__title-icon--navy {
+  background: rgba(6, 21, 74, 0.08);
+  color: var(--navy);
+}
+
+.gh-card__title-row h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+  line-height: 1.25;
+}
+
+.gh-card__desc {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Difficulty pills */
+
+.gh-card__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.gh-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.gh-pill--easy {
+  color: #047857;
+  background: #ecfdf5;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.gh-pill--medium {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.gh-pill--hard {
+  color: #991b1b;
+  background: #fef2f2;
+  border-color: rgba(239, 68, 68, 0.22);
+}
+
+/* Stats row */
+
+.gh-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin: 0 0 18px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  list-style: none;
+}
+
+.gh-card__stats li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.gh-card__stats svg {
+  width: 14px;
+  height: 14px;
+  color: var(--navy);
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+/* CTA */
+
+.gh-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 11px;
+  background: var(--navy);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.gh-card__cta svg {
+  width: 14px;
+  height: 14px;
+}
+
+.gh-card__cta:hover {
+  background: var(--navy-mid);
+  box-shadow: 0 8px 22px rgba(6, 21, 74, 0.22);
+}
+
+.gh-card:active .gh-card__cta,
+.gh-card__cta:active {
+  transform: scale(0.98);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 960px) {
+  .gh-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .gh-hero__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gh-hero__metrics {
+    width: 100%;
+  }
+
+  .gh-hero__metrics div {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .gh-hero {
+    min-height: auto;
+  }
+
+  .gh-hero__metrics {
+    flex-wrap: wrap;
+  }
+
+  .gh-hero__metrics div {
+    flex: 1 1 calc(33% - 12px);
+  }
+
+  .gh-card__stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

@@ -1,0 +1,654 @@
+/* === Who Am I? — FIFA Premium Game UI === */
+.wai {
+  --fifa-navy: #06154a;
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.14);
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --white: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  min-height: 100vh;
+  background: var(--white);
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 64px);
+}
+
+.wai__shell {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* ---- Top bar ---- */
+.wai__topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.wai__brand h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--fifa-navy);
+  line-height: 1.1;
+}
+
+.wai__brand h1::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 12px;
+  border-radius: 2px;
+}
+
+.wai__brand p {
+  margin: 14px 0 0;
+  max-width: 420px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.wai__league-tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(6, 21, 74, 0.06);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--fifa-navy);
+}
+
+.wai__rank {
+  flex-shrink: 0;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: var(--fifa-navy);
+  color: var(--white);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(6, 21, 74, 0.18);
+}
+
+.wai__rank span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.wai__rank strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+/* ---- Stats ---- */
+.wai__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.wai__stat {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+}
+
+.wai__stat span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.wai__stat strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--fifa-navy);
+}
+
+/* ---- Progress ---- */
+.wai__progress {
+  margin-bottom: 28px;
+}
+
+.wai__progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.wai__progress-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fifa-navy);
+}
+
+.wai__progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #eef0f5;
+  overflow: hidden;
+}
+
+.wai__progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--fifa-navy), #0a2a7a);
+  transition: width 0.45s ease;
+}
+
+.wai__progress-fill::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.55), transparent);
+  animation: wai-shimmer 2s infinite;
+}
+
+@keyframes wai-shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+/* ---- Main game card ---- */
+.wai__game-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  padding: clamp(20px, 3vw, 32px);
+  border-radius: 24px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 48px rgba(6, 21, 74, 0.08);
+}
+
+/* ---- Image column ---- */
+.wai__image-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #eef0f5;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 32px rgba(6, 21, 74, 0.12);
+  aspect-ratio: 4 / 5;
+  contain: strict;
+}
+
+.wai__player-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 0.09s ease-out;
+  will-change: opacity;
+}
+
+.wai__player-img--fade {
+  opacity: 0.72;
+}
+
+.wai__image-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(6, 21, 74, 0.35));
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wai__image-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(6, 21, 74, 0.82);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* ---- Quiz column ---- */
+.wai__quiz-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.wai__hints {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(6, 21, 74, 0.04);
+  border: 1px solid var(--border);
+}
+
+.wai__hint-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: var(--gold-soft);
+  color: #9a7d1e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.wai__hint-btn:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.22);
+}
+
+.wai__hint-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wai__hint-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.wai__hint-list li {
+  font-size: 13px;
+  color: var(--fifa-navy);
+}
+
+.wai__hint-list li span {
+  display: inline-block;
+  min-width: 92px;
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.wai__question-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fifa-navy);
+}
+
+.wai__timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #9a7d1e;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.wai__timer svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.wai__options {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.wai__option {
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--fifa-navy);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transform: translate3d(0, 0, 0);
+}
+
+.wai__option:hover:not(:disabled) {
+  transform: translate3d(0, -2px, 0);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 6px 18px rgba(6, 21, 74, 0.08);
+}
+
+.wai__option.is-selected {
+  border-color: var(--fifa-navy);
+  background: rgba(6, 21, 74, 0.04);
+  box-shadow: 0 0 0 2px rgba(6, 21, 74, 0.12);
+}
+
+.wai__option.is-correct {
+  border-color: var(--success);
+  background: rgba(22, 163, 74, 0.1);
+  animation: wai-pop 0.35s ease;
+}
+
+.wai__option.is-wrong {
+  border-color: var(--error);
+  background: rgba(220, 38, 38, 0.08);
+  animation: wai-shake 0.4s ease;
+}
+
+.wai__option:disabled {
+  cursor: default;
+}
+
+@keyframes wai-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wai-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.wai__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.wai__btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.wai__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.wai__btn--primary {
+  background: var(--fifa-navy);
+  color: var(--white);
+}
+
+.wai__btn--primary:hover:not(:disabled) {
+  background: #0a1f5c;
+  box-shadow: 0 8px 22px rgba(6, 21, 74, 0.22);
+}
+
+.wai__btn--secondary {
+  background: var(--white);
+  color: var(--fifa-navy);
+  border: 1px solid var(--border);
+}
+
+.wai__btn--secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.wai__btn--gold {
+  background: var(--gold);
+  color: var(--fifa-navy);
+}
+
+.wai__btn--gold:hover {
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.35);
+}
+
+/* ---- Completion ---- */
+.wai--complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wai__complete-card {
+  width: min(520px, 100%);
+  padding: clamp(32px, 5vw, 48px);
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(160deg, #ffffff, #f8fafc);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 56px rgba(6, 21, 74, 0.12);
+}
+
+.wai__complete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9a7d1e;
+}
+
+.wai__complete-card h2 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 34px);
+  color: var(--fifa-navy);
+}
+
+.wai__final-score {
+  margin: 24px 0 8px;
+  font-size: clamp(40px, 8vw, 56px);
+  font-weight: 800;
+  color: var(--fifa-navy);
+  line-height: 1;
+}
+
+.wai__final-score span {
+  color: var(--gold);
+}
+
+.wai__accuracy {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.wai__complete-time {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.wai__complete-rank {
+  display: inline-block;
+  margin-bottom: 28px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  background: var(--fifa-navy);
+  color: var(--white);
+}
+
+.wai__complete-rank strong {
+  color: var(--gold);
+}
+
+.wai__complete-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Boot loading screen ---- */
+.wai--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.wai__loading-card {
+  width: min(420px, 92vw);
+  padding: 40px 32px;
+  text-align: center;
+  border-radius: 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 48px rgba(6, 21, 74, 0.1);
+}
+
+.wai__loading-badge {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9a7d1e;
+}
+
+.wai__loading-card h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: var(--fifa-navy);
+}
+
+.wai__loading-card p {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.wai__loading-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #eef0f5;
+  overflow: hidden;
+}
+
+.wai__loading-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--fifa-navy), #0a2a7a);
+  transition: width 0.25s ease;
+}
+
+/* ---- Empty state ---- */
+.wai__empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-secondary);
+}
+
+.wai__empty a {
+  color: var(--fifa-navy);
+  font-weight: 700;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 860px) {
+  .wai__game-card {
+    grid-template-columns: 1fr;
+  }
+
+  .wai__image-card {
+    aspect-ratio: 16 / 10;
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  .wai__topbar {
+    flex-direction: column;
+  }
+
+  .wai__rank {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .wai__rank strong {
+    margin-top: 0;
+    font-size: 20px;
+  }
+
+  .wai__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .wai__actions {
+    flex-direction: column;
+  }
+
+  .wai__btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wai__option,
+  .wai__btn,
+  .wai__progress-fill,
+  .wai__image-card img {
+    animation: none;
+    transition: none;
+  }
+
+  .wai__progress-fill::after {
+    animation: none;
+  }
+}

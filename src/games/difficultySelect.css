@@ -1,0 +1,134 @@
+.ds {
+  --fifa-navy: #06154a;
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.14);
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  min-height: 100vh;
+  background: #ffffff;
+  padding: clamp(32px, 5vw, 56px) clamp(16px, 4vw, 40px);
+}
+
+.ds__inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.ds__back {
+  display: inline-block;
+  margin-bottom: 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fifa-navy);
+  text-decoration: none;
+}
+
+.ds__back:hover {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.ds__header {
+  text-align: center;
+  margin-bottom: clamp(36px, 5vw, 48px);
+}
+
+.ds__eyebrow {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 7px 18px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #9a7d1e;
+}
+
+.ds__header h1 {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: 800;
+  color: var(--fifa-navy);
+}
+
+.ds__header h1::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--gold);
+  margin: 16px auto 0;
+  border-radius: 2px;
+}
+
+.ds__header p {
+  margin: 18px auto 0;
+  max-width: 560px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.ds__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.ds__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 28px 24px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(6, 21, 74, 0.07);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ds__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 14px 36px rgba(6, 21, 74, 0.12);
+}
+
+.ds__badge {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(6, 21, 74, 0.06);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--fifa-navy);
+}
+
+.ds__card h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fifa-navy);
+}
+
+.ds__card p {
+  margin: 0 0 20px;
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.ds__cta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.3px;
+}

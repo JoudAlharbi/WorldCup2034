@@ -10,49 +10,6 @@
   margin-bottom: 30px;
 }
 
-/* === Teams Section === */
-.teams-section {
-  padding: 3rem 1rem;
-  text-align: center;
-  background-color: #ffffff;
-}
-
-.teams-section h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-}
-
-/* Team logo hover effect */
-.teams-section img {
-  transition: transform 0.3s ease;
-}
-
-.teams-section img:hover {
-  transform: scale(1.15);
-}
-
-/* === News Section === */
-.news-section {
-  padding: 3rem 1rem;
-  text-align: center;
-  background-color: #f9f9f9;
-}
-
-.news-section h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-/* News card hover effect */
-.news-section a > div {
-  transition: transform 0.3s ease;
-}
-
-.news-section a > div:hover {
-  transform: translateY(-10px);
-}
-
 /* === Team Players Section === */
 .players-section {
   padding: 3rem 1rem;
