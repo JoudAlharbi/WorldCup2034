@@ -1,0 +1,292 @@
+/* === Matches Coming Soon — White & Navy FIFA === */
+.mcs {
+  --fifa-navy: #06154a;
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.15);
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --white: #ffffff;
+  background-color: var(--white);
+  padding: clamp(80px, 11vw, 120px) clamp(24px, 5vw, 56px);
+}
+
+.mcs__inner {
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ---- Hero ---- */
+.mcs__hero {
+  margin-bottom: clamp(56px, 8vw, 80px);
+}
+
+.mcs__eyebrow {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 7px 18px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #9a7d1e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.mcs__title {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--fifa-navy);
+}
+
+.mcs__title::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--gold);
+  margin: 20px auto 0;
+  border-radius: 2px;
+}
+
+.mcs__subtitle {
+  margin: 24px auto 0;
+  max-width: 560px;
+  font-size: clamp(16px, 1.9vw, 18px);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ---- Section labels ---- */
+.mcs__section-label {
+  margin: 0 0 28px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.mcs__section-label::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--gold);
+  margin: 12px auto 0;
+  border-radius: 1px;
+}
+
+/* ---- Countdown ---- */
+.mcs__countdown-section {
+  margin-bottom: clamp(64px, 9vw, 88px);
+}
+
+.mcs__countdown-wrap {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.mcs__countdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.mcs__unit {
+  flex: 1 1 80px;
+  min-width: 72px;
+  max-width: 108px;
+  padding: 22px 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(6, 21, 74, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mcs__unit:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 8px rgba(6, 21, 74, 0.08);
+}
+
+.mcs__unit-num {
+  display: block;
+  font-size: clamp(28px, 4.5vw, 36px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--fifa-navy);
+  line-height: 1;
+}
+
+.mcs__unit-lbl {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ---- Navy info cards ---- */
+.mcs__info-section {
+  margin-bottom: clamp(48px, 7vw, 64px);
+}
+
+.mcs__card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  text-align: left;
+}
+
+.mcs__feature {
+  padding: 28px 28px 30px;
+  background: var(--fifa-navy);
+  border: none;
+  border-radius: 22px;
+  box-shadow: 0 8px 28px rgba(6, 21, 74, 0.18);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.mcs__feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(6, 21, 74, 0.24);
+}
+
+.mcs-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.mcs-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--gold);
+}
+
+.mcs__feature h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.4;
+}
+
+.mcs__feature p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- Buttons ---- */
+.mcs__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.mcs__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mcs__btn--primary {
+  background: var(--fifa-navy);
+  color: var(--white);
+  border: 1px solid var(--fifa-navy);
+}
+
+.mcs__btn--primary:hover {
+  background: #0a1f5c;
+  border-color: #0a1f5c;
+  box-shadow: 0 6px 20px rgba(6, 21, 74, 0.2);
+  text-decoration: none;
+  color: var(--white);
+}
+
+.mcs__btn--ghost {
+  background: var(--white);
+  color: var(--fifa-navy);
+  border: 1px solid var(--border);
+}
+
+.mcs__btn--ghost:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  text-decoration: none;
+  color: var(--fifa-navy);
+}
+
+.mcs__note {
+  margin: 0 auto;
+  max-width: 480px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .mcs {
+    padding: 56px 20px;
+  }
+
+  .mcs__card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mcs__unit {
+    min-width: calc(33.333% - 12px);
+    flex: 1 1 calc(33.333% - 12px);
+    padding: 18px 10px;
+  }
+
+  .mcs__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mcs__btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcs__unit,
+  .mcs__feature,
+  .mcs__btn {
+    transition: none;
+  }
+
+  .mcs__feature:hover {
+    transform: none;
+  }
+}

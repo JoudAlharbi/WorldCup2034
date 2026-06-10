@@ -1,17 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getMatches, STAGES } from "./matchesService";
+import { getMatches, STAGES, getKnockoutMatches, getGroupMatches } from "./matchesService";
+import { isTeamDetermined } from "./matchUtils";
 import MatchCard from "./MatchCard";
 import FeaturedMatch from "./FeaturedMatch";
+import TournamentBracket from "./TournamentBracket";
 import "./matches.css";
 
 const SkeletonCard = () => (
   <div className="mc mc--skeleton">
+    <div className="sk sk--media" />
     <div className="sk sk--row" />
-    <div className="mc__teams">
-      <div className="sk sk--flag" />
-      <div className="sk sk--vs" />
-      <div className="sk sk--flag" />
-    </div>
     <div className="sk sk--line" />
     <div className="sk sk--line short" />
   </div>
@@ -19,7 +17,7 @@ const SkeletonCard = () => (
 
 function MatchesSchedule() {
   const [matches, setMatches] = useState([]);
-  const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [status, setStatus] = useState("loading");
   const [stage, setStage] = useState("All");
   const [query, setQuery] = useState("");
 
@@ -38,9 +36,10 @@ function MatchesSchedule() {
     };
   }, []);
 
-  // Next upcoming match (earliest by date) for the featured hero.
+  const knockoutMatches = useMemo(() => getKnockoutMatches(matches), [matches]);
+
   const featured = useMemo(() => {
-    return matches
+    return getGroupMatches(matches)
       .filter((m) => m.status === "Upcoming")
       .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
   }, [matches]);
@@ -52,21 +51,32 @@ function MatchesSchedule() {
       .filter((m) => (stage === "All" ? true : m.stage === stage))
       .filter((m) => {
         if (!q) return true;
+        const teamMatch = [m.teamA, m.teamB].some(
+          (t) => isTeamDetermined(t) && t.name.toLowerCase().includes(q)
+        );
         return (
-          m.teamA.name.toLowerCase().includes(q) ||
-          m.teamB.name.toLowerCase().includes(q) ||
+          teamMatch ||
           m.city.toLowerCase().includes(q) ||
-          m.stadium.toLowerCase().includes(q)
+          m.stadium.toLowerCase().includes(q) ||
+          m.stage.toLowerCase().includes(q) ||
+          (m.label && m.label.toLowerCase().includes(q))
         );
       });
   }, [matches, stage, query, featured]);
+
+  const showBracket =
+    status === "ready" &&
+    knockoutMatches.length > 0 &&
+    (stage === "All" || stage !== "Group Stage");
 
   return (
     <section className="ms">
       <div className="ms__head">
         <span className="ms__badge">Official Schedule</span>
         <h2 className="ms__title">Match Center</h2>
-        <p className="ms__subtitle">Planned fixtures and venues for FIFA World Cup 2034</p>
+        <p className="ms__subtitle">
+          Planned fixtures, tournament bracket, and venues for FIFA World Cup 2034
+        </p>
       </div>
 
       {status === "loading" && (
@@ -84,7 +94,7 @@ function MatchesSchedule() {
 
       {status === "error" && (
         <div className="ms__state">
-          <h3>We couldn't load the schedule</h3>
+          <h3>We couldn&apos;t load the schedule</h3>
           <p>Please refresh the page to try again.</p>
         </div>
       )}
@@ -93,11 +103,22 @@ function MatchesSchedule() {
         <>
           {featured && <FeaturedMatch match={featured} />}
 
+          {showBracket && (
+            <TournamentBracket
+              matches={
+                stage === "All"
+                  ? knockoutMatches
+                  : knockoutMatches.filter((m) => m.stage === stage)
+              }
+            />
+          )}
+
           <div className="ms__controls">
             <div className="ms__filters">
               {["All", ...STAGES].map((s) => (
                 <button
                   key={s}
+                  type="button"
                   className={`ms-filter${stage === s ? " is-active" : ""}`}
                   onClick={() => setStage(s)}
                 >

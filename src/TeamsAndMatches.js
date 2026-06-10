@@ -3,7 +3,7 @@ import React, { useState } from 'react';import './TeamsAndMatches.css';
 // import { Hero } from './PlayZone';
 import Hero from './components/Hero';
 import { Link } from 'react-router-dom';
-import MatchesSchedule from './matches/MatchesSchedule';
+import MatchesComingSoon from './matches/MatchesComingSoon';
 
 
 function scrollTeams(amount) {
@@ -38,15 +38,12 @@ const closeModal = () => {
     <div>
       {/* Hero Section */}
       <Hero
-        headline="Don't Miss a Moment"
-        sub="Explore the World Cup 2034 Match Schedule!"
+        headline="FIFA World Cup 2034 Matches"
+        sub="The official schedule is on its way — explore host cities and stadiums while you wait."
         background={process.env.PUBLIC_URL + '/team-background.png'}
       />
 
-      {/* Matches Section */}
-      <section id="matches-section">
-        <MatchesSchedule />
-      </section>
+      <MatchesComingSoon />
 
 
 {/* Teams Section */}
