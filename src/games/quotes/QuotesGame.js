@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { getThemeClass } from "../difficultyConfig";
+import { recordGameResult } from "../progression";
+import "../difficultyThemes.css";
 import "../gameShell.css";
 import { DIFFICULTY_LABELS, formatTime, VALID_DIFFICULTIES } from "../shared/quizUtils";
-import { buildQuotesRound } from "./quotesData";
+import { buildQuotesRound, getQuotesMechanics } from "./quotesData";
 
 const QUESTIONS_PER_ROUND = 8;
-const FEEDBACK_MS = 1600;
 
 const initialState = {
   index: 0,
@@ -44,14 +46,19 @@ function reducer(state, action) {
 export default function QuotesGame() {
   const { difficulty } = useParams();
   const slug = (difficulty || "").toLowerCase();
+  const mechanics = useMemo(() => getQuotesMechanics(slug), [slug]);
+  const themeClass = getThemeClass(slug);
 
   const [roundKey, setRoundKey] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(null);
+  const [recorded, setRecorded] = useState(false);
 
-  const questions = useMemo(
-    () => (VALID_DIFFICULTIES.includes(slug) ? buildQuotesRound(slug, QUESTIONS_PER_ROUND) : []),
-    [slug, roundKey]
-  );
+  const questions = useMemo(() => {
+    if (!VALID_DIFFICULTIES.includes(slug)) return [];
+    return buildQuotesRound(slug, QUESTIONS_PER_ROUND);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, roundKey]);
 
   const current = questions[state.index];
   const score = state.answers.filter((a) => a.correct).length;
@@ -61,6 +68,11 @@ export default function QuotesGame() {
   const progress = questions.length
     ? Math.round((Math.min(state.index + (state.done ? 0 : 1), questions.length) / questions.length) * 100)
     : 0;
+
+  const advanceOrSubmitWrong = useCallback(() => {
+    if (!current || state.showFeedback || state.done) return;
+    dispatch({ type: "SUBMIT", choice: null, correct: false });
+  }, [current, state.showFeedback, state.done]);
 
   useEffect(() => {
     if (state.done) return undefined;
@@ -72,9 +84,38 @@ export default function QuotesGame() {
 
   useEffect(() => {
     if (!state.showFeedback) return undefined;
-    const id = setTimeout(() => dispatch({ type: "NEXT", total: questions.length }), FEEDBACK_MS);
+    const id = setTimeout(() => dispatch({ type: "NEXT", total: questions.length }), 1400);
     return () => clearTimeout(id);
   }, [state.showFeedback, questions.length]);
+
+  useEffect(() => {
+    if (state.done || state.showFeedback || !current || !mechanics.questionTimer) {
+      setQuestionTimeLeft(null);
+      return undefined;
+    }
+    setQuestionTimeLeft(mechanics.questionTimer);
+    const id = setInterval(() => {
+      setQuestionTimeLeft((t) => {
+        if (t <= 1) {
+          advanceOrSubmitWrong();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [state.index, state.done, state.showFeedback, current, mechanics.questionTimer, advanceOrSubmitWrong]);
+
+  useEffect(() => {
+    if (state.done && !recorded && questions.length > 0) {
+      recordGameResult("quotes", slug, {
+        score,
+        total: questions.length,
+        accuracy: Math.round((score / questions.length) * 100),
+      });
+      setRecorded(true);
+    }
+  }, [state.done, recorded, score, questions.length, slug]);
 
   const handleSelect = useCallback(
     (option) => {
@@ -94,20 +135,21 @@ export default function QuotesGame() {
   }, [state.selected, state.showFeedback, current]);
 
   const restart = () => {
+    setRecorded(false);
     setRoundKey((k) => k + 1);
     dispatch({ type: "RESET" });
   };
 
   if (!VALID_DIFFICULTIES.includes(slug)) {
-    return <Navigate to="/games/quotes" replace />;
+    return <Navigate to="/play-zone" replace />;
   }
 
   if (questions.length === 0) {
     return (
-      <div className="gs">
+      <div className={`gs ${themeClass}`}>
         <div className="gs__shell">
           <p>Not enough quotes for this difficulty.</p>
-          <Link to="/games/quotes" className="gs__btn gs__btn--secondary">Back</Link>
+          <Link to="/play-zone" className="gs__btn gs__btn--secondary">Back</Link>
         </div>
       </div>
     );
@@ -115,7 +157,7 @@ export default function QuotesGame() {
 
   if (state.done) {
     return (
-      <div className="gs gs--complete">
+      <div className={`gs gs--complete ${themeClass}`}>
         <div className="gs__complete-card">
           <span className="gs__tag">{DIFFICULTY_LABELS[slug]} · Challenge Complete</span>
           <h2>Who Said It?</h2>
@@ -136,11 +178,8 @@ export default function QuotesGame() {
             <button type="button" className="gs__btn gs__btn--primary" onClick={restart}>
               Play Again
             </button>
-            <Link to="/games/quotes" className="gs__btn gs__btn--secondary">
-              Change Difficulty
-            </Link>
             <Link to="/play-zone" className="gs__btn gs__btn--secondary">
-              All Games
+              Change Difficulty
             </Link>
           </div>
         </div>
@@ -149,7 +188,7 @@ export default function QuotesGame() {
   }
 
   return (
-    <div className="gs">
+    <div className={`gs ${themeClass}`}>
       <div className="gs__shell">
         <div className="gs__topbar">
           <div className="gs__brand">
@@ -157,7 +196,7 @@ export default function QuotesGame() {
             <p>Read the quote and identify which football legend or manager said it.</p>
             <span className="gs__tag">{DIFFICULTY_LABELS[slug]}</span>
           </div>
-          <Link to="/games/quotes" className="gs__btn gs__btn--secondary" style={{ flex: "none", minWidth: "auto" }}>
+          <Link to="/play-zone" className="gs__btn gs__btn--secondary" style={{ flex: "none", minWidth: "auto" }}>
             Exit
           </Link>
         </div>
@@ -172,8 +211,12 @@ export default function QuotesGame() {
             <strong>{accuracy}%</strong>
           </div>
           <div className="gs__stat">
-            <span>Timer</span>
-            <strong>{formatTime(state.elapsed)}</strong>
+            <span>{mechanics.questionTimer ? "Quote Timer" : "Elapsed"}</span>
+            <strong>
+              {mechanics.questionTimer && questionTimeLeft != null
+                ? `${questionTimeLeft}s`
+                : formatTime(state.elapsed)}
+            </strong>
           </div>
         </div>
 
@@ -188,20 +231,7 @@ export default function QuotesGame() {
         </div>
 
         <div className="gs__card">
-          <blockquote
-            style={{
-              margin: "0 0 24px",
-              padding: "20px 24px",
-              borderLeft: "4px solid #d4af37",
-              background: "rgba(6, 21, 74, 0.04)",
-              borderRadius: "0 12px 12px 0",
-              fontSize: "clamp(17px, 3vw, 20px)",
-              lineHeight: 1.65,
-              fontStyle: "italic",
-              color: "#06154a",
-              textAlign: "left",
-            }}
-          >
+          <blockquote className="gs__quote">
             &ldquo;{current.quote}&rdquo;
           </blockquote>
 
@@ -209,7 +239,7 @@ export default function QuotesGame() {
             Who said this?
           </p>
 
-          <div className="gs__options">
+          <div className={`gs__options${slug === "hard" ? " gs__options--dense" : ""}`}>
             {current.options.map((option) => {
               let className = "gs__option";
               if (state.selected === option) className += " is-selected";

@@ -1,44 +1,58 @@
 {
-  "generatedAt": "2026-06-10T16:43:03.769Z",
-  "ready": [
-    "messi",
-    "ronaldo",
-    "mbappe",
-    "neymar",
-    "salah",
-    "haaland",
-    "rodri",
-    "bernardo",
-    "son",
-    "debruyne",
-    "modric",
-    "bellingham",
-    "pedri",
-    "yamal",
-    "musiala",
-    "wirtz",
-    "osimhen",
-    "leao",
-    "davies",
-    "foden",
-    "kane",
-    "vinicius",
-    "ibrahimovic",
-    "benzema",
-    "neuer",
-    "griezmann",
-    "rice",
-    "saka",
-    "lewandowski"
-  ],
+  "generatedAt": "2026-06-11T09:22:13.895Z",
+  "ready": {
+    "easy": [
+      "messi",
+      "ronaldo",
+      "mbappe",
+      "neymar",
+      "salah",
+      "haaland",
+      "vinicius"
+    ],
+    "medium": [
+      "rodri",
+      "barella",
+      "valverde",
+      "musiala",
+      "bruno-guimaraes",
+      "kubo"
+    ],
+    "hard": [
+      "burruchaga",
+      "suker",
+      "bebeto",
+      "cafu"
+    ]
+  },
   "skipped": [
-    "lautaro"
+    "medium/kim",
+    "medium/dilorenzo",
+    "hard/grosso",
+    "hard/klose",
+    "hard/carlos-alberto",
+    "hard/matthaus",
+    "hard/stoichkov"
   ],
-  "reveals": [
-    "eye-reveal",
-    "face-crop",
-    "silhouette",
-    "jersey-reveal",
-    "celebration"
-  ]
+  "revealsByTier": {
+    "easy": [
+      "face-full",
+      "clear-portrait",
+      "celebration",
+      "jersey-reveal"
+    ],
+    "medium": [
+      "action-shot",
+      "side-profile",
+      "partial-face",
+      "silhouette"
+    ],
+    "hard": [
+      "silhouette-dark",
+      "eye-reveal",
+      "boots-crop",
+      "extreme-crop",
+      "vintage"
+    ]
+  }
 }

@@ -1,0 +1,124 @@
+.scm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.scm-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(6, 21, 74, 0.55);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.scm-card {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  padding: 32px 28px 28px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 24px 64px rgba(6, 21, 74, 0.2);
+  text-align: center;
+}
+
+.scm-card--easy { border-color: rgba(16, 185, 129, 0.45); }
+.scm-card--medium { border-color: rgba(212, 175, 55, 0.55); }
+.scm-card--hard { border-color: rgba(239, 68, 68, 0.45); }
+
+.scm-card__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.scm-card__game {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.scm-card__title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #06154a;
+}
+
+.scm-card--easy .scm-card__title { color: #047857; }
+.scm-card--medium .scm-card__title { color: #92400e; }
+.scm-card--hard .scm-card__title { color: #b91c1c; }
+
+.scm-card__rating {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.scm-card__rules {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #f9fafb;
+  list-style: none;
+  text-align: left;
+}
+
+.scm-card__rules li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.scm-card__rules li:last-child { border-bottom: none; }
+
+.scm-card__rules span { color: #6b7280; }
+.scm-card__rules strong { color: #06154a; }
+
+.scm-card__tagline {
+  margin: 0 0 22px;
+  font-size: 14px;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.scm-card__start {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.scm-card--easy .scm-card__start { background: #059669; }
+.scm-card--medium .scm-card__start { background: #06154a; }
+.scm-card--hard .scm-card__start { background: #dc2626; }
+
+.scm-card__start:hover {
+  box-shadow: 0 8px 22px rgba(6, 21, 74, 0.18);
+  transform: translateY(-1px);
+}

@@ -1,0 +1,91 @@
+/* Difficulty theme tokens — applied via .theme-easy | .theme-medium | .theme-hard */
+
+.theme-easy {
+  --diff-color: #047857;
+  --diff-soft: #ecfdf5;
+  --diff-border: rgba(16, 185, 129, 0.4);
+  --diff-btn: #059669;
+  --diff-progress: linear-gradient(90deg, #059669, #10b981);
+}
+
+.theme-medium {
+  --diff-color: #b45309;
+  --diff-soft: #fffbeb;
+  --diff-border: rgba(212, 175, 55, 0.5);
+  --diff-btn: #d4af37;
+  --diff-progress: linear-gradient(90deg, #d4af37, #f59e0b);
+}
+
+.theme-hard {
+  --diff-color: #b91c1c;
+  --diff-soft: #fef2f2;
+  --diff-border: rgba(239, 68, 68, 0.4);
+  --diff-btn: #dc2626;
+  --diff-progress: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+.theme-easy .gs__progress-fill,
+.theme-easy .wai__progress-fill {
+  background: var(--diff-progress) !important;
+}
+
+.theme-medium .gs__progress-fill,
+.theme-medium .wai__progress-fill {
+  background: var(--diff-progress) !important;
+}
+
+.theme-hard .gs__progress-fill,
+.theme-hard .wai__progress-fill {
+  background: var(--diff-progress) !important;
+}
+
+.theme-easy .gs__btn--primary,
+.theme-easy .wai__btn--primary {
+  background: var(--diff-btn) !important;
+}
+
+.theme-medium .gs__btn--primary,
+.theme-medium .wai__btn--primary {
+  background: #06154a !important;
+}
+
+.theme-hard .gs__btn--primary,
+.theme-hard .wai__btn--primary {
+  background: var(--diff-btn) !important;
+}
+
+.theme-easy .gs__tag,
+.theme-easy .wai__league-tag {
+  background: var(--diff-soft) !important;
+  color: var(--diff-color) !important;
+  border-color: var(--diff-border) !important;
+}
+
+.theme-medium .gs__tag,
+.theme-medium .wai__league-tag {
+  background: var(--diff-soft) !important;
+  color: var(--diff-color) !important;
+  border-color: var(--diff-border) !important;
+}
+
+.theme-hard .gs__tag,
+.theme-hard .wai__league-tag {
+  background: var(--diff-soft) !important;
+  color: var(--diff-color) !important;
+  border-color: var(--diff-border) !important;
+}
+
+.theme-easy .gs__complete-score span,
+.theme-easy .wai__final-score span {
+  color: #059669 !important;
+}
+
+.theme-medium .gs__complete-score span,
+.theme-medium .wai__final-score span {
+  color: #d4af37 !important;
+}
+
+.theme-hard .gs__complete-score span,
+.theme-hard .wai__final-score span {
+  color: #dc2626 !important;
+}

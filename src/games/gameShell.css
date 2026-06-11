@@ -278,3 +278,20 @@
     width: 100%;
   }
 }
+
+.gs__options--dense {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gs__quote {
+  margin: 0 0 24px;
+  padding: 20px 24px;
+  border-left: 4px solid #d4af37;
+  background: rgba(6, 21, 74, 0.04);
+  border-radius: 0 12px 12px 0;
+  font-size: clamp(17px, 3vw, 20px);
+  line-height: 1.65;
+  font-style: italic;
+  color: #06154a;
+  text-align: left;
+}

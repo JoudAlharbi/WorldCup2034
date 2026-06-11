@@ -1,70 +1,79 @@
-export const REVEAL_TYPES = [
-  "eye-reveal",
-  "face-crop",
-  "silhouette",
-  "jersey-reveal",
-  "celebration",
-];
+export const REVEALS_BY_TIER = {
+  easy: ["face-full", "clear-portrait", "celebration", "jersey-reveal"],
+  medium: ["action-shot", "side-profile", "partial-face", "silhouette"],
+  hard: ["silhouette-dark", "eye-reveal", "boots-crop", "extreme-crop", "vintage"],
+};
 
 export const REVEAL_LABELS = {
-  "eye-reveal": "Eye Reveal",
-  "face-crop": "Face Crop",
-  silhouette: "Silhouette",
+  "face-full": "Full Face Reveal",
+  "clear-portrait": "Clear Portrait",
+  celebration: "Celebration Moment",
   "jersey-reveal": "Jersey Reveal",
-  celebration: "Celebration",
+  "action-shot": "Action Shot",
+  "side-profile": "Side Profile",
+  "partial-face": "Partial Face",
+  silhouette: "Silhouette",
+  "silhouette-dark": "Dark Silhouette",
+  "eye-reveal": "Eye Reveal",
+  "boots-crop": "Boots Only",
+  "extreme-crop": "Extreme Crop",
+  vintage: "Vintage Photo",
 };
 
 const ASSET_ROOT = `${process.env.PUBLIC_URL}/assets/games/players`;
 
-/** Source portrait stored locally. */
-export function localPlayerPhoto(playerId) {
-  return `${ASSET_ROOT}/${playerId}.jpg`;
+export function localPlayerPhoto(tier, playerId) {
+  return `${ASSET_ROOT}/${tier}/${playerId}/source.jpg`;
 }
 
-/** Optimized reveal WebP — generated from real photos only. */
-export function localRevealImage(playerId, revealType) {
-  return `${ASSET_ROOT}/${playerId}/${revealType}.webp`;
+/** Tier-scoped reveal asset — each difficulty uses a separate image pool. */
+export function localRevealImage(tier, playerId, revealType) {
+  return `${ASSET_ROOT}/${tier}/${playerId}/${revealType}.webp`;
 }
 
-const RAW_PLAYERS = [
+export function getRevealTypesForTier(tier) {
+  return REVEALS_BY_TIER[tier] || REVEALS_BY_TIER.easy;
+}
+
+const EASY_PLAYERS = [
   { id: "messi", name: "Lionel Messi", nationality: "Argentina", club: "Inter Miami", position: "Forward", difficulty: "easy" },
   { id: "ronaldo", name: "Cristiano Ronaldo", nationality: "Portugal", club: "Al Nassr", position: "Forward", difficulty: "easy" },
   { id: "mbappe", name: "Kylian Mbappé", nationality: "France", club: "Real Madrid", position: "Forward", difficulty: "easy" },
   { id: "neymar", name: "Neymar Jr.", nationality: "Brazil", club: "Al Hilal", position: "Forward", difficulty: "easy" },
   { id: "salah", name: "Mohamed Salah", nationality: "Egypt", club: "Liverpool", position: "Forward", difficulty: "easy" },
   { id: "haaland", name: "Erling Haaland", nationality: "Norway", club: "Manchester City", position: "Forward", difficulty: "easy" },
-  { id: "rodri", name: "Rodri", nationality: "Spain", club: "Manchester City", position: "Midfielder", difficulty: "medium" },
-  { id: "bernardo", name: "Bernardo Silva", nationality: "Portugal", club: "Manchester City", position: "Midfielder", difficulty: "medium" },
-  { id: "lautaro", name: "Lautaro Martínez", nationality: "Argentina", club: "Inter Milan", position: "Forward", difficulty: "medium" },
-  { id: "son", name: "Son Heung-min", nationality: "South Korea", club: "Tottenham Hotspur", position: "Forward", difficulty: "medium" },
-  { id: "debruyne", name: "Kevin De Bruyne", nationality: "Belgium", club: "Manchester City", position: "Midfielder", difficulty: "medium" },
-  { id: "modric", name: "Luka Modrić", nationality: "Croatia", club: "Real Madrid", position: "Midfielder", difficulty: "medium" },
-  { id: "lewandowski", name: "Robert Lewandowski", nationality: "Poland", club: "Barcelona", position: "Forward", difficulty: "medium" },
-  { id: "bellingham", name: "Jude Bellingham", nationality: "England", club: "Real Madrid", position: "Midfielder", difficulty: "hard" },
-  { id: "pedri", name: "Pedri", nationality: "Spain", club: "Barcelona", position: "Midfielder", difficulty: "hard" },
-  { id: "yamal", name: "Lamine Yamal", nationality: "Spain", club: "Barcelona", position: "Forward", difficulty: "hard" },
-  { id: "musiala", name: "Jamal Musiala", nationality: "Germany", club: "Bayern Munich", position: "Midfielder", difficulty: "hard" },
-  { id: "wirtz", name: "Florian Wirtz", nationality: "Germany", club: "Bayer Leverkusen", position: "Midfielder", difficulty: "hard" },
-  { id: "osimhen", name: "Victor Osimhen", nationality: "Nigeria", club: "Galatasaray", position: "Forward", difficulty: "hard" },
-  { id: "leao", name: "Rafael Leão", nationality: "Portugal", club: "AC Milan", position: "Forward", difficulty: "hard" },
-  { id: "davies", name: "Alphonso Davies", nationality: "Canada", club: "Bayern Munich", position: "Defender", difficulty: "hard" },
-  { id: "foden", name: "Phil Foden", nationality: "England", club: "Manchester City", position: "Midfielder", difficulty: "hard" },
-  { id: "kane", name: "Harry Kane", nationality: "England", club: "Bayern Munich", position: "Forward", difficulty: "hard" },
-  { id: "vinicius", name: "Vinícius Júnior", nationality: "Brazil", club: "Real Madrid", position: "Forward", difficulty: "hard" },
-  { id: "ibrahimovic", name: "Zlatan Ibrahimović", nationality: "Sweden", club: "Retired", position: "Forward", difficulty: "hard" },
-  { id: "benzema", name: "Karim Benzema", nationality: "France", club: "Al Ittihad", position: "Forward", difficulty: "hard" },
-  { id: "neuer", name: "Manuel Neuer", nationality: "Germany", club: "Bayern Munich", position: "Goalkeeper", difficulty: "hard" },
-  { id: "griezmann", name: "Antoine Griezmann", nationality: "France", club: "Atlético Madrid", position: "Forward", difficulty: "hard" },
-  { id: "rice", name: "Declan Rice", nationality: "England", club: "Arsenal", position: "Midfielder", difficulty: "hard" },
-  { id: "saka", name: "Bukayo Saka", nationality: "England", club: "Arsenal", position: "Forward", difficulty: "hard" },
+  { id: "vinicius", name: "Vinícius Júnior", nationality: "Brazil", club: "Real Madrid", position: "Forward", difficulty: "easy" },
 ];
 
-export const PLAYER_POOL = RAW_PLAYERS;
+const MEDIUM_PLAYERS = [
+  { id: "rodri", name: "Rodri", nationality: "Spain", club: "Manchester City", position: "Midfielder", difficulty: "medium" },
+  { id: "barella", name: "Nicolò Barella", nationality: "Italy", club: "Inter Milan", position: "Midfielder", difficulty: "medium" },
+  { id: "valverde", name: "Federico Valverde", nationality: "Uruguay", club: "Real Madrid", position: "Midfielder", difficulty: "medium" },
+  { id: "musiala", name: "Jamal Musiala", nationality: "Germany", club: "Bayern Munich", position: "Midfielder", difficulty: "medium" },
+  { id: "kim", name: "Kim Min-jae", nationality: "South Korea", club: "Bayern Munich", position: "Defender", difficulty: "medium" },
+  { id: "bruno-guimaraes", name: "Bruno Guimarães", nationality: "Brazil", club: "Newcastle United", position: "Midfielder", difficulty: "medium" },
+  { id: "kubo", name: "Takefusa Kubo", nationality: "Japan", club: "Real Sociedad", position: "Forward", difficulty: "medium" },
+  { id: "dilorenzo", name: "Giovanni Di Lorenzo", nationality: "Italy", club: "Napoli", position: "Defender", difficulty: "medium" },
+];
+
+const HARD_PLAYERS = [
+  { id: "burruchaga", name: "Jorge Burruchaga", nationality: "Argentina", club: "Retired", position: "Midfielder", difficulty: "hard", era: "1986 World Cup" },
+  { id: "grosso", name: "Fabio Grosso", nationality: "Italy", club: "Retired", position: "Defender", difficulty: "hard", era: "2006 World Cup" },
+  { id: "klose", name: "Miroslav Klose", nationality: "Germany", club: "Retired", position: "Forward", difficulty: "hard", era: "World Cup record holder" },
+  { id: "suker", name: "Davor Šuker", nationality: "Croatia", club: "Retired", position: "Forward", difficulty: "hard", era: "1998 Golden Boot" },
+  { id: "carlos-alberto", name: "Carlos Alberto", nationality: "Brazil", club: "Retired", position: "Defender", difficulty: "hard", era: "1970 World Cup captain" },
+  { id: "bebeto", name: "Bebeto", nationality: "Brazil", club: "Retired", position: "Forward", difficulty: "hard", era: "1994 World Cup" },
+  { id: "matthaus", name: "Lothar Matthäus", nationality: "Germany", club: "Retired", position: "Midfielder", difficulty: "hard", era: "1990 World Cup winner" },
+  { id: "cafu", name: "Cafu", nationality: "Brazil", club: "Retired", position: "Defender", difficulty: "hard", era: "2002 World Cup captain" },
+  { id: "stoichkov", name: "Hristo Stoichkov", nationality: "Bulgaria", club: "Retired", position: "Forward", difficulty: "hard", era: "1994 World Cup" },
+];
+
+export const PLAYER_POOL = [...EASY_PLAYERS, ...MEDIUM_PLAYERS, ...HARD_PLAYERS];
 
 export const DIFFICULTY_LABELS = {
   easy: "Easy — Global Superstars",
-  medium: "Medium — Top International Players",
-  hard: "Hard — Rising Stars & Tough Calls",
+  medium: "Medium — Elite Internationals",
+  hard: "Hard — World Cup Legends",
 };
 
 export const LEGACY_DIFFICULTY_MAP = {

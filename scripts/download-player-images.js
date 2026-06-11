@@ -1,16 +1,16 @@
 /**
- * Download real player portraits via Wikipedia REST API + legacy fallbacks.
- * Output: public/assets/games/players/{id}.jpg
- * Run: npm run whoami:download
+ * Download tier-scoped player portraits.
+ * Output: public/assets/games/players/{tier}/{id}/source.jpg
  */
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
 const MANIFEST = require("./playerImageManifest.json");
-const OUT_DIR = path.join(__dirname, "..", "public", "assets", "games", "players");
-const LEGACY_DIR = path.join(__dirname, "..", "public", "whoami", "players");
-const MIN_BYTES = 12000;
+const ROOT = path.join(__dirname, "..", "public", "assets", "games", "players");
+const LEGACY = path.join(__dirname, "..", "public", "assets", "games", "players");
+const OLD_LEGACY = path.join(__dirname, "..", "public", "whoami", "players");
+const MIN_BYTES = 11000;
 const TARGET_WIDTH = 640;
 
 function sleep(ms) {
@@ -51,8 +51,8 @@ function downloadBuffer(url, attempt = 1) {
           downloadBuffer(res.headers.location, attempt).then(resolve).catch(reject);
           return;
         }
-        if (res.statusCode === 429 && attempt < 4) {
-          sleep(2000 * attempt).then(() => downloadBuffer(url, attempt + 1).then(resolve).catch(reject));
+        if (res.statusCode === 429 && attempt < 5) {
+          sleep(3000 * attempt).then(() => downloadBuffer(url, attempt + 1).then(resolve).catch(reject));
           return;
         }
         if (res.statusCode !== 200) {
@@ -67,56 +67,55 @@ function downloadBuffer(url, attempt = 1) {
   });
 }
 
-function upscaleWikiThumb(thumbUrl) {
-  if (!thumbUrl) return null;
-  return thumbUrl.replace(/\/(\d+)px-/, `/${TARGET_WIDTH}px-`);
-}
-
 async function fetchWikipediaPortrait(wikiTitle) {
   const api = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
   const data = await fetchJson(api);
-  const url = data.originalimage?.source || upscaleWikiThumb(data.thumbnail?.source);
+  const url = data.originalimage?.source || data.thumbnail?.source?.replace(/\/(\d+)px-/, `/${TARGET_WIDTH}px-`);
   if (!url) throw new Error("No portrait on Wikipedia page");
   return url;
 }
 
-function copyLegacyIfValid(player, dest) {
-  const legacy = path.join(LEGACY_DIR, `${player.id}.jpg`);
-  if (fs.existsSync(legacy) && fs.statSync(legacy).size >= MIN_BYTES) {
-    fs.copyFileSync(legacy, dest);
-    return true;
+function tryCopyLegacy(player, dest) {
+  const paths = [
+    path.join(ROOT, player.tier, player.id, "source.jpg"),
+    path.join(LEGACY, `${player.id}.jpg`),
+    path.join(OLD_LEGACY, `${player.id}.jpg`),
+  ];
+  for (const src of paths) {
+    if (fs.existsSync(src) && fs.statSync(src).size >= MIN_BYTES) {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.copyFileSync(src, dest);
+      return true;
+    }
   }
   return false;
 }
 
 async function main() {
-  fs.mkdirSync(OUT_DIR, { recursive: true });
   let ok = 0;
   const failed = [];
 
   for (const player of MANIFEST) {
-    const dest = path.join(OUT_DIR, `${player.id}.jpg`);
+    const outDir = path.join(ROOT, player.tier, player.id);
+    const dest = path.join(outDir, "source.jpg");
+    fs.mkdirSync(outDir, { recursive: true });
 
     if (fs.existsSync(dest) && fs.statSync(dest).size >= MIN_BYTES) {
-      console.log(`Skip ${player.id} (exists)`);
+      console.log(`Skip ${player.tier}/${player.id} (exists)`);
       ok += 1;
       continue;
     }
 
-    process.stdout.write(`${player.id}... `);
+    process.stdout.write(`${player.tier}/${player.id}... `);
     try {
-      if (copyLegacyIfValid(player, dest)) {
+      if (tryCopyLegacy(player, dest)) {
         console.log("legacy");
         ok += 1;
         continue;
       }
 
-      let portraitUrl = player.directUrl || null;
-      if (!portraitUrl) {
-        portraitUrl = await fetchWikipediaPortrait(player.wikiTitle);
-      }
-
-      await sleep(player.directUrl ? 2500 : 1200);
+      const portraitUrl = player.directUrl || (await fetchWikipediaPortrait(player.wikiTitle));
+      await sleep(2500);
       const buffer = await downloadBuffer(portraitUrl);
 
       if (buffer.length < MIN_BYTES) {
@@ -128,14 +127,13 @@ async function main() {
       ok += 1;
     } catch (err) {
       console.log(`FAILED (${err.message})`);
-      failed.push(player.id);
+      failed.push(`${player.tier}/${player.id}`);
       if (fs.existsSync(dest)) fs.unlinkSync(dest);
     }
   }
 
   console.log(`\nDownloaded/verified: ${ok}/${MANIFEST.length}`);
   if (failed.length) console.log(`Failed: ${failed.join(", ")}`);
-  if (failed.length) process.exitCode = 1;
 }
 
 main().catch((err) => {

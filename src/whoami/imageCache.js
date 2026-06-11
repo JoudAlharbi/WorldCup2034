@@ -1,5 +1,5 @@
-import { REVEAL_TYPES, localRevealImage } from "./playerPool";
-import { fetchReadyPlayerIds } from "./playerAssets";
+import { getRevealTypesForTier, localRevealImage } from "./playerPool";
+import { fetchPlayerRegistry } from "./playerAssets";
 import { logPerf } from "./performanceLog";
 
 /** @type {Map<string, HTMLImageElement>} */
@@ -11,14 +11,13 @@ const srcByKey = new Map();
 /** @type {Set<string>} */
 const failedKeys = new Set();
 
-function cacheKey(playerId, revealType) {
-  return `${playerId}:${revealType}`;
+function cacheKey(tier, playerId, revealType) {
+  return `${tier}:${playerId}:${revealType}`;
 }
 
 function loadImageElement(src) {
   if (imageObjects.has(src)) {
-    const cached = imageObjects.get(src);
-    return Promise.resolve(cached);
+    return Promise.resolve(imageObjects.get(src));
   }
 
   return new Promise((resolve, reject) => {
@@ -37,9 +36,9 @@ function loadImageElement(src) {
   });
 }
 
-export function preloadRevealAsset(playerId, revealType) {
-  const src = localRevealImage(playerId, revealType);
-  const key = cacheKey(playerId, revealType);
+export function preloadRevealAsset(tier, playerId, revealType) {
+  const src = localRevealImage(tier, playerId, revealType);
+  const key = cacheKey(tier, playerId, revealType);
 
   if (failedKeys.has(key)) {
     return Promise.reject(new Error(`Previously failed: ${key}`));
@@ -53,7 +52,7 @@ export function preloadRevealAsset(playerId, revealType) {
   return loadImageElement(src)
     .then((img) => {
       srcByKey.set(key, img.src);
-      logPerf("preloadReveal", performance.now() - start, { playerId, revealType });
+      logPerf("preloadReveal", performance.now() - start, { tier, playerId, revealType });
       return img.src;
     })
     .catch((err) => {
@@ -62,43 +61,39 @@ export function preloadRevealAsset(playerId, revealType) {
     });
 }
 
-export async function preloadPlayerReveals(playerIds, onProgress) {
+export async function preloadTierAssets(tier, playerIds, onProgress) {
+  const revealTypes = getRevealTypesForTier(tier);
   const tasks = [];
   playerIds.forEach((id) => {
-    REVEAL_TYPES.forEach((revealType) => {
+    revealTypes.forEach((revealType) => {
       tasks.push({ id, revealType });
     });
   });
 
   let done = 0;
-  const results = await Promise.allSettled(
+  await Promise.allSettled(
     tasks.map(async ({ id, revealType }) => {
       try {
-        await preloadRevealAsset(id, revealType);
+        await preloadRevealAsset(tier, id, revealType);
       } finally {
         done += 1;
         if (onProgress) onProgress(Math.round((done / tasks.length) * 100));
       }
     })
   );
-
-  const failed = results.filter((r) => r.status === "rejected").length;
-  if (failed > 0) {
-    logPerf("preloadPlayerReveals", 0, { failed, total: tasks.length });
-  }
 }
 
-export async function preloadReadyPool(onProgress) {
+export async function preloadForDifficulty(difficulty, onProgress) {
   const start = performance.now();
-  const readyIds = await fetchReadyPlayerIds();
-  const ids = [...readyIds];
-  await preloadPlayerReveals(ids, onProgress);
-  logPerf("preloadReadyPool", performance.now() - start, { players: ids.length });
-  return readyIds;
+  const registry = await fetchPlayerRegistry();
+  const ids = registry?.ready?.[difficulty] || [];
+  await preloadTierAssets(difficulty, ids, onProgress);
+  logPerf("preloadForDifficulty", performance.now() - start, { difficulty, players: ids.length });
+  return ids;
 }
 
-export function getCachedRevealSrc(playerId, revealType) {
-  const key = cacheKey(playerId, revealType);
+export function getCachedRevealSrc(tier, playerId, revealType) {
+  const key = cacheKey(tier, playerId, revealType);
   if (failedKeys.has(key)) return null;
   return srcByKey.get(key) || null;
 }
@@ -106,7 +101,7 @@ export function getCachedRevealSrc(playerId, revealType) {
 export function bindQuestionImages(questions) {
   return questions
     .map((q) => {
-      const cachedSrc = getCachedRevealSrc(q.player.id, q.revealType);
+      const cachedSrc = getCachedRevealSrc(q.tier || q.player.difficulty, q.player.id, q.revealType);
       if (!cachedSrc) return null;
       return { ...q, cachedSrc };
     })

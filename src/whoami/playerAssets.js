@@ -1,18 +1,26 @@
 const REGISTRY_URL = `${process.env.PUBLIC_URL}/assets/games/players/registry.json`;
 
-let cachedReadyIds = null;
+let cachedRegistry = null;
 
-export async function fetchReadyPlayerIds() {
-  if (cachedReadyIds) return cachedReadyIds;
+export async function fetchPlayerRegistry() {
+  if (cachedRegistry) return cachedRegistry;
 
   const response = await fetch(REGISTRY_URL, { cache: "no-cache" });
   if (!response.ok) {
     throw new Error("Player image registry unavailable");
   }
 
-  const data = await response.json();
-  cachedReadyIds = new Set(Array.isArray(data.ready) ? data.ready : []);
-  return cachedReadyIds;
+  cachedRegistry = await response.json();
+  return cachedRegistry;
+}
+
+export async function fetchReadyPlayerIds(difficulty) {
+  const registry = await fetchPlayerRegistry();
+  const tierReady = registry?.ready?.[difficulty];
+  if (Array.isArray(tierReady)) {
+    return new Set(tierReady);
+  }
+  return new Set(Array.isArray(registry?.ready) ? registry.ready : []);
 }
 
 export function filterPoolByReady(pool, readyIds) {
@@ -20,5 +28,5 @@ export function filterPoolByReady(pool, readyIds) {
 }
 
 export function clearAssetRegistryCache() {
-  cachedReadyIds = null;
+  cachedRegistry = null;
 }

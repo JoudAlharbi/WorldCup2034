@@ -1,12 +1,16 @@
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { createGameSession } from "./whoami/gameSession";
+import { getWhoAmIMechanics } from "./whoami/questionEngine";
 import {
   DIFFICULTY_LABELS,
   LEGACY_DIFFICULTY_MAP,
   REVEAL_LABELS,
 } from "./whoami/playerPool";
+import { getThemeClass } from "./games/difficultyConfig";
+import { recordGameResult } from "./games/progression";
 import { logPerf } from "./whoami/performanceLog";
+import "./games/difficultyThemes.css";
 import "./whoami/whoAmI.css";
 
 const VALID_DIFFICULTIES = ["easy", "medium", "hard"];
@@ -78,12 +82,16 @@ export default function WhoAmI() {
   const { leagueName } = useParams();
   const difficulty = useMemo(() => getDifficultyFromParam(leagueName), [leagueName]);
   const difficultyLabel = DIFFICULTY_LABELS[difficulty] || difficulty;
+  const mechanics = useMemo(() => getWhoAmIMechanics(difficulty), [difficulty]);
+  const themeClass = getThemeClass(difficulty);
 
   const [session, setSession] = useState({ status: "idle", questions: [] });
   const [game, dispatch] = useReducer(gameReducer, initialGameState);
   const [hintsRevealed, setHintsRevealed] = useState(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [flashFeedback, setFlashFeedback] = useState(null);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(null);
+  const [recorded, setRecorded] = useState(false);
 
   const imgRef = useRef(null);
   const labelRef = useRef(null);
@@ -101,7 +109,13 @@ export default function WhoAmI() {
     () => answers.filter((a) => a.status === "correct").length,
     [answers]
   );
-  const currentScore = correctCount * 100;
+  const currentScore = useMemo(() => {
+    let score = correctCount * 100;
+    answers.forEach((a) => {
+      if (a.status === "wrong") score -= mechanics.wrongPenalty;
+    });
+    return Math.max(0, score);
+  }, [answers, correctCount, mechanics.wrongPenalty]);
   const remaining = Math.max(total - index, 0);
   const globalRank = Math.max(1, 371 - correctCount);
   const progressPct = total ? (answers.length / total) * 100 : 0;
@@ -170,6 +184,43 @@ export default function WhoAmI() {
     return () => clearInterval(timer);
   }, [isReady, isComplete]);
 
+  const handleTimeout = useCallback(() => {
+    if (!current) return;
+    dispatch({ type: "SUBMIT", status: "wrong", choice: null });
+    setHintsRevealed(0);
+    setFlashFeedback({ status: "wrong", answer: current.answer, selected: null });
+    setTimeout(() => setFlashFeedback(null), 120);
+  }, [current]);
+
+  useEffect(() => {
+    if (!isReady || isComplete || !current || !mechanics.questionTimer) {
+      setQuestionTimeLeft(null);
+      return undefined;
+    }
+    setQuestionTimeLeft(mechanics.questionTimer);
+    const id = setInterval(() => {
+      setQuestionTimeLeft((t) => {
+        if (t <= 1) {
+          handleTimeout();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [index, isReady, isComplete, current, mechanics.questionTimer, handleTimeout]);
+
+  useEffect(() => {
+    if (isComplete && !recorded && total > 0) {
+      recordGameResult("who-am-i", difficulty, {
+        score: correctCount,
+        total,
+        accuracy,
+      });
+      setRecorded(true);
+    }
+  }, [isComplete, recorded, correctCount, total, accuracy, difficulty]);
+
   useEffect(() => {
     if (isComplete && completionTime === null) {
       dispatch({
@@ -200,12 +251,14 @@ export default function WhoAmI() {
   }, [current]);
 
   const handlePlayAgain = useCallback(() => {
+    setRecorded(false);
     bootGame(difficulty);
   }, [bootGame, difficulty]);
 
   const handleRevealHint = useCallback(() => {
-    setHintsRevealed((count) => Math.min(count + 1, 3));
-  }, []);
+    if (mechanics.hintLimit === 0) return;
+    setHintsRevealed((count) => Math.min(count + 1, mechanics.hintLimit));
+  }, [mechanics.hintLimit]);
 
   const getOptionClass = useCallback(
     (option) => {
@@ -227,7 +280,7 @@ export default function WhoAmI() {
       <div className="wai">
         <div className="wai__empty">
           <p>Select a valid difficulty level to begin.</p>
-          <Link to="/games/who-am-i">Choose Difficulty</Link>
+          <Link to="/play-zone">Choose Difficulty</Link>
         </div>
       </div>
     );
@@ -241,7 +294,7 @@ export default function WhoAmI() {
           <p style={{ fontSize: 14, color: "#6b7280", marginTop: 8 }}>
             Run <code>npm run whoami:download</code> and <code>npm run whoami:assets</code> to build the image dataset.
           </p>
-          <Link to="/games/who-am-i">Choose Difficulty</Link>
+          <Link to="/play-zone">Choose Difficulty</Link>
         </div>
       </div>
     );
@@ -258,7 +311,7 @@ export default function WhoAmI() {
 
   if (isComplete) {
     return (
-      <div className="wai wai--complete">
+      <div className={`wai wai--complete ${themeClass}`}>
         <div className="wai__complete-card">
           <span className="wai__complete-badge">Challenge Complete</span>
           <h2>Great effort!</h2>
@@ -288,7 +341,7 @@ export default function WhoAmI() {
   if (!current) return null;
 
   return (
-    <div className="wai">
+    <div className={`wai ${themeClass}`}>
       <div className="wai__shell">
         <header className="wai__topbar">
           <div className="wai__brand">
@@ -353,39 +406,49 @@ export default function WhoAmI() {
               </span>
               <span className="wai__timer">
                 <ClockIcon />
-                {formatTime(currentTime)}
+                {mechanics.questionTimer && questionTimeLeft != null
+                  ? `${questionTimeLeft}s`
+                  : formatTime(currentTime)}
               </span>
             </div>
 
-            <div className="wai__hints">
-              <button
-                type="button"
-                className="wai__hint-btn"
-                onClick={handleRevealHint}
-                disabled={hintsRevealed >= 3}
-              >
-                Reveal Hint ({hintsRevealed}/3)
-              </button>
-              {hintsRevealed > 0 && (
-                <ul className="wai__hint-list">
-                  {hintsRevealed >= 1 && (
-                    <li>
-                      <span>National team</span> {current.hints.nationality}
-                    </li>
-                  )}
-                  {hintsRevealed >= 2 && (
-                    <li>
-                      <span>Club</span> {current.hints.club}
-                    </li>
-                  )}
-                  {hintsRevealed >= 3 && (
-                    <li>
-                      <span>Position</span> {current.hints.position}
-                    </li>
-                  )}
-                </ul>
-              )}
-            </div>
+            {mechanics.hintLimit > 0 ? (
+              <div className="wai__hints">
+                <button
+                  type="button"
+                  className="wai__hint-btn"
+                  onClick={handleRevealHint}
+                  disabled={hintsRevealed >= mechanics.hintLimit}
+                >
+                  Reveal Hint ({hintsRevealed}/{mechanics.hintLimit})
+                </button>
+                {hintsRevealed > 0 && (
+                  <ul className="wai__hint-list">
+                    {hintsRevealed >= 1 && (
+                      <li>
+                        <span>National team</span> {current.hints.nationality}
+                      </li>
+                    )}
+                    {hintsRevealed >= 2 && (
+                      <li>
+                        <span>Club</span> {current.hints.club}
+                      </li>
+                    )}
+                    {hintsRevealed >= 3 && mechanics.hintLimit >= 3 && (
+                      <li>
+                        <span>Position</span> {current.hints.position}
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <p className="wai__no-hints">
+                {difficulty === "hard" && current?.hints?.era
+                  ? `Expert mode — ${current.hints.era}. No hints.`
+                  : "Hints disabled on Hard mode"}
+              </p>
+            )}
 
             <div className="wai__options">
               {current.options.map((option) => (

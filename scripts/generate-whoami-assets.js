@@ -1,9 +1,7 @@
 /**
- * Generates reveal WebP assets from real player photos.
- * Source: public/assets/games/players/{id}.jpg
- * Output: public/assets/games/players/{id}/{reveal}.webp
- * Run: npm run whoami:assets
- * NEVER generates placeholder graphics — skips players without a valid photo.
+ * Generates tier-specific reveal WebP assets.
+ * Source: public/assets/games/players/{tier}/{id}/source.jpg
+ * Output: public/assets/games/players/{tier}/{id}/{reveal}.webp
  */
 const fs = require("fs");
 const path = require("path");
@@ -11,129 +9,112 @@ const sharp = require("sharp");
 
 const MANIFEST = require("./playerImageManifest.json");
 
-const SOURCE_DIR = path.join(__dirname, "..", "public", "assets", "games", "players");
-const TARGET_WIDTH = 420;
-const TARGET_HEIGHT = 525;
+const ROOT = path.join(__dirname, "..", "public", "assets", "games", "players");
+const W = 420;
+const H = 525;
 const MAX_BYTES = 400 * 1024;
-const MIN_SOURCE_BYTES = 15000;
+const MIN_SOURCE = 11000;
 
-const REVEALS = [
-  { id: "eye-reveal", generate: generateEyeReveal },
-  { id: "face-crop", generate: generateFaceCrop },
-  { id: "silhouette", generate: generateSilhouette },
-  { id: "jersey-reveal", generate: generateJerseyReveal },
-  { id: "celebration", generate: generateCelebration },
-];
+const TIER_REVEALS = {
+  easy: ["face-full", "clear-portrait", "celebration", "jersey-reveal"],
+  medium: ["action-shot", "side-profile", "partial-face", "silhouette"],
+  hard: ["silhouette-dark", "eye-reveal", "boots-crop", "extreme-crop", "vintage"],
+};
 
-async function writeWebp(sharpInstance, dest) {
+async function writeWebp(buildPipeline) {
   let quality = 82;
-  let output = await sharpInstance.webp({ quality, effort: 4 }).toBuffer();
-  while (output.length > MAX_BYTES && quality > 50) {
+  let output = await buildPipeline(quality);
+  while (output.length > MAX_BYTES && quality > 48) {
     quality -= 6;
-    output = await sharpInstance.clone().webp({ quality, effort: 4 }).toBuffer();
+    output = await buildPipeline(quality);
   }
-  fs.writeFileSync(dest, output);
-  return output.length;
+  return output;
 }
 
-function basePipeline(sourceBuffer) {
-  return sharp(sourceBuffer)
-    .rotate()
-    .resize(TARGET_WIDTH, TARGET_HEIGHT, { fit: "cover", position: "centre" });
+async function baseBuffer(sourceBuffer) {
+  return sharp(sourceBuffer).rotate().resize(W, H, { fit: "cover", position: "centre" }).toBuffer();
 }
 
-async function generateEyeReveal(baseBuffer) {
-  const w = TARGET_WIDTH;
-  const h = TARGET_HEIGHT;
-  return sharp(baseBuffer).extract({
-    left: Math.floor(w * 0.22),
-    top: 0,
-    width: Math.floor(w * 0.56),
-    height: Math.max(1, Math.floor(h * 0.32)),
-  }).resize(w, h, { fit: "cover" });
-}
+const GENERATORS = {
+  "face-full": (buf) =>
+    sharp(buf).extract({ left: Math.floor(W * 0.08), top: 0, width: Math.floor(W * 0.84), height: Math.floor(H * 0.55) }).resize(W, H, { fit: "cover" }),
+  "clear-portrait": (buf) =>
+    sharp(buf).extract({ left: Math.floor(W * 0.15), top: Math.floor(H * 0.02), width: Math.floor(W * 0.7), height: Math.floor(H * 0.5) }).resize(W, H, { fit: "cover" }),
+  celebration: (buf) =>
+    sharp(buf).modulate({ brightness: 1.05 }).resize(Math.floor(W * 1.08), Math.floor(H * 1.08), { fit: "cover" }).extract({ left: Math.floor(W * 0.04), top: 0, width: W, height: H }),
+  "jersey-reveal": (buf) =>
+    sharp(buf).extract({ left: Math.floor(W * 0.1), top: Math.floor(H * 0.35), width: Math.floor(W * 0.8), height: Math.floor(H * 0.55) }).resize(W, H, { fit: "cover" }),
 
-async function generateFaceCrop(baseBuffer) {
-  const w = TARGET_WIDTH;
-  const h = TARGET_HEIGHT;
-  return sharp(baseBuffer).extract({
-    left: Math.floor(w * 0.12),
-    top: Math.floor(h * 0.05),
-    width: Math.floor(w * 0.76),
-    height: Math.max(1, Math.floor(h * 0.48)),
-  }).resize(w, h, { fit: "cover" });
-}
+  "action-shot": (buf) =>
+    sharp(buf).extract({ left: 0, top: Math.floor(H * 0.25), width: W, height: Math.floor(H * 0.75) }).resize(W, H, { fit: "cover" }),
+  "side-profile": (buf) =>
+    sharp(buf).extract({ left: Math.floor(W * 0.55), top: Math.floor(H * 0.05), width: Math.floor(W * 0.4), height: Math.floor(H * 0.45) }).resize(W, H, { fit: "cover" }),
+  "partial-face": (buf) =>
+    sharp(buf).extract({ left: Math.floor(W * 0.28), top: Math.floor(H * 0.08), width: Math.floor(W * 0.44), height: Math.floor(H * 0.28) }).resize(W, H, { fit: "cover" }),
+  silhouette: (buf) =>
+    sharp(buf).grayscale().modulate({ brightness: 0.55, saturation: 0 }).linear(1.1, -20),
 
-async function generateSilhouette(baseBuffer) {
-  return sharp(baseBuffer).grayscale().modulate({ brightness: 0.35, saturation: 0 }).linear(1.15, -10);
-}
-
-async function generateJerseyReveal(baseBuffer) {
-  const w = TARGET_WIDTH;
-  const h = TARGET_HEIGHT;
-  return sharp(baseBuffer).extract({
-    left: Math.floor(w * 0.08),
-    top: Math.floor(h * 0.42),
-    width: Math.floor(w * 0.84),
-    height: Math.max(1, Math.floor(h * 0.58)),
-  }).resize(w, h, { fit: "cover" });
-}
-
-async function generateCelebration(baseBuffer) {
-  const w = TARGET_WIDTH;
-  const h = TARGET_HEIGHT;
-  const celebSize = Math.floor(w * 1.12);
-  const celebBuffer = await sharp(baseBuffer)
-    .resize(celebSize, Math.floor(h * 1.12), { fit: "cover" })
-    .toBuffer();
-  const celebMeta = await sharp(celebBuffer).metadata();
-  const left = Math.max(0, Math.floor((celebMeta.width - w) / 2));
-  const top = Math.max(0, Math.floor((celebMeta.height - h) / 2));
-  return sharp(celebBuffer).extract({
-    left,
-    top,
-    width: Math.min(w, celebMeta.width - left),
-    height: Math.min(h, celebMeta.height - top),
-  }).resize(w, h, { fit: "cover" });
-}
+  "silhouette-dark": (buf) =>
+    sharp(buf).grayscale().modulate({ brightness: 0.22, saturation: 0 }).linear(1.3, -30),
+  "eye-reveal": (buf) =>
+    sharp(buf)
+      .extract({ left: Math.floor(W * 0.25), top: Math.floor(H * 0.04), width: Math.floor(W * 0.5), height: Math.floor(H * 0.2) })
+      .resize(W, H, { fit: "cover" })
+      .sharpen({ sigma: 1 }),
+  "boots-crop": (buf) =>
+    sharp(buf)
+      .extract({ left: Math.floor(W * 0.1), top: Math.floor(H * 0.72), width: Math.floor(W * 0.8), height: Math.floor(H * 0.28) })
+      .resize(W, H, { fit: "cover" }),
+  "extreme-crop": (buf) =>
+    sharp(buf)
+      .extract({ left: Math.floor(W * 0.35), top: Math.floor(H * 0.38), width: Math.floor(W * 0.3), height: Math.floor(H * 0.3) })
+      .resize(W, H, { fit: "cover" })
+      .modulate({ brightness: 0.85 }),
+  vintage: (buf) =>
+    sharp(buf).grayscale().modulate({ brightness: 0.7 }).tint({ r: 80, g: 70, b: 60 }).blur(0.6),
+};
 
 async function generatePlayer(player) {
-  const sourcePath = path.join(SOURCE_DIR, `${player.id}.jpg`);
-  if (!fs.existsSync(sourcePath) || fs.statSync(sourcePath).size < MIN_SOURCE_BYTES) {
-    return { ok: false, reason: "missing source photo" };
+  const sourcePath = path.join(ROOT, player.tier, player.id, "source.jpg");
+  if (!fs.existsSync(sourcePath) || fs.statSync(sourcePath).size < MIN_SOURCE) {
+    return { ok: false, reason: "missing source" };
   }
 
-  const sourceBuffer = await fs.promises.readFile(sourcePath);
-  const baseBuffer = await basePipeline(sourceBuffer).toBuffer();
-  const outDir = path.join(SOURCE_DIR, player.id);
-  fs.mkdirSync(outDir, { recursive: true });
+  const sourceBuffer = fs.readFileSync(sourcePath);
+  const base = await baseBuffer(sourceBuffer);
+  const reveals = TIER_REVEALS[player.tier] || TIER_REVEALS.easy;
+  const outDir = path.join(ROOT, player.tier, player.id);
 
-  for (const reveal of REVEALS) {
-    const pipeline = await reveal.generate(baseBuffer);
-    await writeWebp(pipeline, path.join(outDir, `${reveal.id}.webp`));
+  for (const revealId of reveals) {
+    const gen = GENERATORS[revealId];
+    if (!gen) continue;
+    const output = await writeWebp((quality) =>
+      gen(base).webp({ quality, effort: 4 }).toBuffer()
+    );
+    fs.writeFileSync(path.join(outDir, `${revealId}.webp`), output);
   }
 
   return { ok: true };
 }
 
 async function main() {
-  const ready = [];
+  const ready = { easy: [], medium: [], hard: [] };
   const skipped = [];
 
   for (const player of MANIFEST) {
-    process.stdout.write(`${player.id}... `);
+    process.stdout.write(`${player.tier}/${player.id}... `);
     try {
       const result = await generatePlayer(player);
       if (result.ok) {
         console.log("ok");
-        ready.push(player.id);
+        ready[player.tier].push(player.id);
       } else {
         console.log(`SKIP (${result.reason})`);
-        skipped.push(player.id);
+        skipped.push(`${player.tier}/${player.id}`);
       }
     } catch (err) {
       console.log(`ERROR (${err.message})`);
-      skipped.push(player.id);
+      skipped.push(`${player.tier}/${player.id}`);
     }
   }
 
@@ -141,16 +122,12 @@ async function main() {
     generatedAt: new Date().toISOString(),
     ready,
     skipped,
-    reveals: REVEALS.map((r) => r.id),
+    revealsByTier: TIER_REVEALS,
   };
-  fs.writeFileSync(
-    path.join(SOURCE_DIR, "registry.json"),
-    JSON.stringify(registry, null, 2)
-  );
 
-  console.log(`\nReady: ${ready.length}/${MANIFEST.length}`);
+  fs.writeFileSync(path.join(ROOT, "registry.json"), JSON.stringify(registry, null, 2));
+  console.log(`\nEasy: ${ready.easy.length} | Medium: ${ready.medium.length} | Hard: ${ready.hard.length}`);
   if (skipped.length) console.log(`Skipped: ${skipped.join(", ")}`);
-  console.log("Registry written to public/assets/games/players/registry.json");
 }
 
 main().catch((err) => {

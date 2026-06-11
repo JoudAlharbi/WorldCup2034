@@ -255,6 +255,18 @@
   border: 1px solid var(--border);
 }
 
+.wai__no-hints {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  font-size: 13px;
+  font-weight: 600;
+  color: #b91c1c;
+  text-align: center;
+}
+
 .wai__hint-btn {
   padding: 8px 14px;
   border-radius: 999px;

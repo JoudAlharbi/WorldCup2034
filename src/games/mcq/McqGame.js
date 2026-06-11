@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { getThemeClass } from "../difficultyConfig";
+import { recordGameResult } from "../progression";
+import "../difficultyThemes.css";
 import "../gameShell.css";
 import { DIFFICULTY_LABELS, formatTime, VALID_DIFFICULTIES } from "../shared/quizUtils";
-import { buildMcqRound, MCQ_CATEGORIES, MCQ_QUESTIONS } from "./mcqQuestions";
+import { buildMcqRound, getMcqMechanics, getMcqPoolSize, MCQ_CATEGORIES } from "./mcqQuestions";
 
 const QUESTIONS_PER_ROUND = 10;
-const FEEDBACK_MS = 1800;
 
 const initialState = {
   index: 0,
@@ -44,14 +46,19 @@ function reducer(state, action) {
 export default function McqGame() {
   const { difficulty } = useParams();
   const slug = (difficulty || "").toLowerCase();
+  const mechanics = useMemo(() => getMcqMechanics(slug), [slug]);
+  const themeClass = getThemeClass(slug);
 
   const [roundKey, setRoundKey] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(null);
+  const [recorded, setRecorded] = useState(false);
 
-  const questions = useMemo(
-    () => (VALID_DIFFICULTIES.includes(slug) ? buildMcqRound(slug, QUESTIONS_PER_ROUND) : []),
-    [slug, roundKey]
-  );
+  const questions = useMemo(() => {
+    if (!VALID_DIFFICULTIES.includes(slug)) return [];
+    return buildMcqRound(slug, QUESTIONS_PER_ROUND);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, roundKey]);
 
   const current = questions[state.index];
   const score = state.answers.filter((a) => a.correct).length;
@@ -61,6 +68,11 @@ export default function McqGame() {
   const progress = questions.length
     ? Math.round((Math.min(state.index + (state.done ? 0 : 1), questions.length) / questions.length) * 100)
     : 0;
+
+  const advanceOrSubmitWrong = useCallback(() => {
+    if (!current || state.showFeedback || state.done) return;
+    dispatch({ type: "SUBMIT", choice: null, correct: false });
+  }, [current, state.showFeedback, state.done]);
 
   useEffect(() => {
     if (state.done) return undefined;
@@ -72,9 +84,41 @@ export default function McqGame() {
 
   useEffect(() => {
     if (!state.showFeedback) return undefined;
-    const id = setTimeout(() => dispatch({ type: "NEXT", total: questions.length }), FEEDBACK_MS);
+    const id = setTimeout(
+      () => dispatch({ type: "NEXT", total: questions.length }),
+      mechanics.feedbackMs
+    );
     return () => clearTimeout(id);
-  }, [state.showFeedback, questions.length]);
+  }, [state.showFeedback, questions.length, mechanics.feedbackMs]);
+
+  useEffect(() => {
+    if (state.done || state.showFeedback || !current || !mechanics.questionTimer) {
+      setQuestionTimeLeft(null);
+      return undefined;
+    }
+    setQuestionTimeLeft(mechanics.questionTimer);
+    const id = setInterval(() => {
+      setQuestionTimeLeft((t) => {
+        if (t <= 1) {
+          advanceOrSubmitWrong();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [state.index, state.done, state.showFeedback, current, mechanics.questionTimer, advanceOrSubmitWrong]);
+
+  useEffect(() => {
+    if (state.done && !recorded && questions.length > 0) {
+      recordGameResult("mcq", slug, {
+        score,
+        total: questions.length,
+        accuracy: Math.round((score / questions.length) * 100),
+      });
+      setRecorded(true);
+    }
+  }, [state.done, recorded, score, questions.length, slug]);
 
   const handleSelect = useCallback(
     (option) => {
@@ -94,20 +138,21 @@ export default function McqGame() {
   }, [state.selected, state.showFeedback, current]);
 
   const restart = () => {
+    setRecorded(false);
     setRoundKey((k) => k + 1);
     dispatch({ type: "RESET" });
   };
 
   if (!VALID_DIFFICULTIES.includes(slug)) {
-    return <Navigate to="/games/mcq" replace />;
+    return <Navigate to="/play-zone" replace />;
   }
 
   if (questions.length === 0) {
     return (
-      <div className="gs">
+      <div className={`gs ${themeClass}`}>
         <div className="gs__shell">
           <p>Not enough questions for this difficulty. Please try another level.</p>
-          <Link to="/games/mcq" className="gs__btn gs__btn--secondary">Back</Link>
+          <Link to="/play-zone" className="gs__btn gs__btn--secondary">Back</Link>
         </div>
       </div>
     );
@@ -115,7 +160,7 @@ export default function McqGame() {
 
   if (state.done) {
     return (
-      <div className="gs gs--complete">
+      <div className={`gs gs--complete ${themeClass}`}>
         <div className="gs__complete-card">
           <span className="gs__tag">{DIFFICULTY_LABELS[slug]} · Quiz Complete</span>
           <h2>FIFA World Cup Quiz</h2>
@@ -136,11 +181,8 @@ export default function McqGame() {
             <button type="button" className="gs__btn gs__btn--primary" onClick={restart}>
               Play Again
             </button>
-            <Link to="/games/mcq" className="gs__btn gs__btn--secondary">
-              Change Difficulty
-            </Link>
             <Link to="/play-zone" className="gs__btn gs__btn--secondary">
-              All Games
+              Change Difficulty
             </Link>
           </div>
         </div>
@@ -149,7 +191,7 @@ export default function McqGame() {
   }
 
   return (
-    <div className="gs">
+    <div className={`gs ${themeClass}`}>
       <div className="gs__shell">
         <div className="gs__topbar">
           <div className="gs__brand">
@@ -157,7 +199,7 @@ export default function McqGame() {
             <p>Test your knowledge across history, records, hosts, stadiums, and legendary finals.</p>
             <span className="gs__tag">{DIFFICULTY_LABELS[slug]} · {MCQ_CATEGORIES[current.category]}</span>
           </div>
-          <Link to="/games/mcq" className="gs__btn gs__btn--secondary" style={{ flex: "none", minWidth: "auto" }}>
+          <Link to="/play-zone" className="gs__btn gs__btn--secondary" style={{ flex: "none", minWidth: "auto" }}>
             Exit
           </Link>
         </div>
@@ -172,8 +214,12 @@ export default function McqGame() {
             <strong>{accuracy}%</strong>
           </div>
           <div className="gs__stat">
-            <span>Timer</span>
-            <strong>{formatTime(state.elapsed)}</strong>
+            <span>{mechanics.questionTimer ? "Question Timer" : "Elapsed"}</span>
+            <strong>
+              {mechanics.questionTimer && questionTimeLeft != null
+                ? `${questionTimeLeft}s`
+                : formatTime(state.elapsed)}
+            </strong>
           </div>
         </div>
 
@@ -192,10 +238,10 @@ export default function McqGame() {
             {current.question}
           </h2>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "#6b7280", textAlign: "left" }}>
-            Select the correct answer
+            {slug === "hard" ? "Select from 6 options" : "Select the correct answer"}
           </p>
 
-          <div className="gs__options">
+          <div className={`gs__options${slug === "hard" ? " gs__options--dense" : ""}`}>
             {current.options.map((option) => {
               let className = "gs__option";
               if (state.selected === option) className += " is-selected";
@@ -217,7 +263,7 @@ export default function McqGame() {
             })}
           </div>
 
-          {state.showFeedback && (
+          {state.showFeedback && mechanics.showExplain && (
             <div className="gs__explain">
               <strong>{state.selected === current.answer ? "Correct!" : "Not quite."}</strong>
               {" "}{current.explanation}
@@ -237,7 +283,7 @@ export default function McqGame() {
         </div>
 
         <p style={{ marginTop: 20, fontSize: 12, color: "#9ca3af", textAlign: "center" }}>
-          Question bank: {MCQ_QUESTIONS.length}+ FIFA World Cup questions
+          Question bank: {getMcqPoolSize(slug)} exclusive {slug} questions
         </p>
       </div>
     </div>
