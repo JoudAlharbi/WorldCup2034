@@ -18,7 +18,7 @@
 
 /* ---- Hero ---- */
 .mcs__hero {
-  margin-bottom: clamp(56px, 8vw, 80px);
+  margin-bottom: clamp(48px, 7vw, 72px);
 }
 
 .mcs__eyebrow {

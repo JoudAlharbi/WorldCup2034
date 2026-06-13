@@ -41,7 +41,6 @@ function TeamsSpotlight() {
     <section className="tsp" id="teams-section" aria-labelledby="tsp-title">
       <div className="tsp__inner">
         <header className="tsp__header">
-          <span className="tsp__eyebrow">Tournament Preview</span>
           <h2 className="tsp__title" id="tsp-title">
             National Teams Spotlight
           </h2>

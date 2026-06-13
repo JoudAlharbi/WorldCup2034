@@ -89,7 +89,6 @@ function MatchesComingSoon() {
     <section className="mcs" id="matches-section">
       <div className="mcs__inner">
         <header className="mcs__hero">
-          <span className="mcs__eyebrow">Official Pre-Launch</span>
           <h2 className="mcs__title">FIFA World Cup 2034 Matches</h2>
           <p className="mcs__subtitle">
             The official match schedule and tournament fixtures will be announced closer to the event.
