@@ -18,9 +18,9 @@ const QUICK_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-  { icon: 'facebook-f', label: 'Facebook', href: 'https://www.facebook.com/FIFA' },
+  { icon: 'facebook-f', label: 'Facebook', href: 'https://www.facebook.com/fifa' },
   { icon: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/fifa/' },
-  { icon: 'x-twitter', label: 'X (Twitter)', href: 'https://twitter.com/FIFA' },
+  { icon: 'x-twitter', label: 'X (Twitter)', href: 'https://x.com/FIFAcom' },
 ];
 
 
