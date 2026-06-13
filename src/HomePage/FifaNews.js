@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { formatRelativePublished } from '../news/newsService';
 import {
   NEWS_PLACEHOLDER,
-  NEWS_REFRESH_MS,
-  fetchFootballNews,
-  formatRelativePublished,
-  hasNewsApiKey,
-} from '../news/newsService';
+  WC2034_NEWS_REFRESH_MS,
+  fetchWc2034News,
+} from '../news/wc2034NewsService';
 import './HomePage.css';
 
 const onImgError = (e) => {
@@ -14,35 +13,27 @@ const onImgError = (e) => {
 
 function FifaNews() {
   const [articles, setArticles] = useState([]);
-  const [status, setStatus] = useState(hasNewsApiKey() ? 'loading' : 'no-key');
+  const [status, setStatus] = useState('loading');
 
   const loadNews = useCallback((silent = false) => {
-    if (!hasNewsApiKey()) {
-      setStatus('no-key');
-      return;
-    }
     if (!silent) {
       setStatus((prev) => (prev === 'ready' ? prev : 'loading'));
     }
 
-    fetchFootballNews(5)
-      .then((list) => {
+    fetchWc2034News(5)
+      .then(({ articles: list }) => {
         setArticles(list);
         setStatus(list.length ? 'ready' : 'empty');
       })
       .catch((err) => {
-        console.error('News fetch error:', err);
-        if (err.message === 'no-key') {
-          setStatus('no-key');
-        } else {
-          setStatus((prev) => (prev === 'ready' ? prev : 'error'));
-        }
+        console.error('WC2034 news fetch error:', err);
+        setStatus((prev) => (prev === 'ready' ? prev : 'error'));
       });
   }, []);
 
   useEffect(() => {
     loadNews();
-    const id = setInterval(() => loadNews(true), NEWS_REFRESH_MS);
+    const id = setInterval(() => loadNews(true), WC2034_NEWS_REFRESH_MS);
     return () => clearInterval(id);
   }, [loadNews]);
 
@@ -52,8 +43,10 @@ function FifaNews() {
   return (
     <section className="fn" id="news-section">
       <div className="fn__head">
-        <h2 className="fn__title">Latest FIFA &amp; World Cup News</h2>
-        <p className="fn__subtitle">Updates from around the world of football</p>
+        <h2 className="fn__title">Latest FIFA World Cup 2034 News</h2>
+        <p className="fn__subtitle">
+          Official updates from Saudi 2034, the WC 2034 Authority, and FIFA
+        </p>
       </div>
 
       {status === 'loading' && (
@@ -81,20 +74,20 @@ function FifaNews() {
         </div>
       )}
 
-      {(status === 'no-key' || status === 'empty') && (
+      {status === 'empty' && (
         <div className="fn-state">
           <div className="fn-state__icon">⚽</div>
-          <h3>Live FIFA news will appear here shortly</h3>
-          <p>We're lining up the latest FIFA and World Cup stories. Check back soon.</p>
+          <h3>Official World Cup 2034 news will appear here shortly</h3>
+          <p>We&apos;re refreshing stories from Saudi 2034, the WC 2034 Authority, and FIFA.</p>
         </div>
       )}
 
       {status === 'error' && (
         <div className="fn-state">
           <div className="fn-state__icon">⚽</div>
-          <h3>Live FIFA news will appear here shortly</h3>
-          <p>We're refreshing the latest stories. Please check back in a moment.</p>
-          <button className="fn-readmore" onClick={() => loadNews()}>Refresh</button>
+          <h3>Official World Cup 2034 news will appear here shortly</h3>
+          <p>Please check back in a moment while we refresh official sources.</p>
+          <button className="fn-readmore" type="button" onClick={() => loadNews()}>Refresh</button>
         </div>
       )}
 
@@ -124,8 +117,8 @@ function FifaNews() {
           )}
 
           <div className="fn-side">
-            {secondary.map((item, index) => (
-              <article className="fn-card fn-mini" key={index}>
+            {secondary.map((item) => (
+              <article className="fn-card fn-mini" key={item.url || item.title}>
                 <div className="fn-media">
                   <img src={item.image || NEWS_PLACEHOLDER} alt={item.title} onError={onImgError} loading="lazy" />
                 </div>
