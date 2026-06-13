@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Award, CheckCircle, ShieldCheck, Trophy } from "lucide-react";
 import { PlayIcon } from "./games/GameIcons";
@@ -189,10 +189,10 @@ export default function GameSelectionPage() {
   const navigate = useNavigate();
   const [selectedDifficulty, setSelectedDifficulty] = useState({});
   const [modal, setModal] = useState(null);
-  const [progressTick, setProgressTick] = useState(0);
+  const [, setProgressTick] = useState(0);
 
-  const achievements = useMemo(() => getAchievements(), [progressTick]);
-  const progress = useMemo(() => getProgressSummary(), [progressTick]);
+  const achievements = getAchievements();
+  const progress = getProgressSummary();
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
 
   useEffect(() => {
