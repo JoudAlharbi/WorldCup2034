@@ -1,10 +1,34 @@
 const STORAGE_KEY = "fifa-fan-games-progress";
 
 const ACHIEVEMENTS = [
-  { id: "easy-complete", icon: "🏅", label: "Complete Easy", check: (p) => p.completions.easy > 0 },
-  { id: "medium-complete", icon: "🥈", label: "Complete Medium", check: (p) => p.completions.medium > 0 },
-  { id: "hard-complete", icon: "🥇", label: "Complete Hard", check: (p) => p.completions.hard > 0 },
-  { id: "world-cup-master", icon: "👑", label: "World Cup Master", check: (p) => p.hardModeCompletions >= 3 },
+  {
+    id: "easy-complete",
+    title: "Easy Completion",
+    subtitle: "Complete any Easy challenge",
+    check: (p) => p.completions.easy > 0,
+    progress: (p) => ({ current: Math.min(p.completions.easy, 1), target: 1 }),
+  },
+  {
+    id: "medium-complete",
+    title: "Medium Completion",
+    subtitle: "Complete any Medium challenge",
+    check: (p) => p.completions.medium > 0,
+    progress: (p) => ({ current: Math.min(p.completions.medium, 1), target: 1 }),
+  },
+  {
+    id: "hard-complete",
+    title: "Hard Completion",
+    subtitle: "Complete any Hard challenge",
+    check: (p) => p.completions.hard > 0,
+    progress: (p) => ({ current: Math.min(p.completions.hard, 1), target: 1 }),
+  },
+  {
+    id: "world-cup-master",
+    title: "World Cup Master",
+    subtitle: "Complete Hard mode 3 times",
+    check: (p) => p.hardModeCompletions >= 3,
+    progress: (p) => ({ current: Math.min(p.hardModeCompletions, 3), target: 3 }),
+  },
 ];
 
 const DEFAULT_STATE = {
@@ -56,10 +80,15 @@ export function recordGameResult(gameId, difficulty, { score, total, accuracy })
 
 export function getAchievements() {
   const state = load();
-  return ACHIEVEMENTS.map((a) => ({
-    ...a,
-    unlocked: a.check(state),
-  }));
+  return ACHIEVEMENTS.map((a) => {
+    const prog = a.progress(state);
+    return {
+      ...a,
+      unlocked: a.check(state),
+      progress: prog,
+      progressPct: Math.round((prog.current / prog.target) * 100),
+    };
+  });
 }
 
 export function getProgressSummary() {
