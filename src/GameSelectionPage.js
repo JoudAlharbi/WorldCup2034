@@ -261,7 +261,6 @@ export default function GameSelectionPage() {
               <span className="pz-section__label">Fan Challenges</span>
               <h2>Select Your Game</h2>
             </div>
-            <p>Each card is a unique experience. Choose a difficulty tier before you play.</p>
           </header>
 
           <div className="pz-games">

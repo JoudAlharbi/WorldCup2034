@@ -56,10 +56,6 @@ function LiveNewsFeed() {
     <section className="lnf" id="news-section" aria-labelledby="lnf-title">
       <div className="lnf__inner">
         <header className="lnf__header">
-          <span className="lnf__badge">
-            <span className="lnf__badge-dot" aria-hidden="true" />
-            Live Football News
-          </span>
           <h2 className="lnf__title" id="lnf-title">
             News Feed
           </h2>
