@@ -32,7 +32,6 @@ const closeModal = () => {
       {/* Hero Section */}
       <Hero
         headline="FIFA World Cup 2034 Matches"
-        sub="The official schedule is on its way — explore host cities and stadiums while you wait."
         background={process.env.PUBLIC_URL + '/team-background.png'}
       />
 

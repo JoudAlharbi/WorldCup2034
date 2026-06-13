@@ -242,10 +242,6 @@ export default function GameSelectionPage() {
               <span className="pz-hero__line">Prove Your</span>
               <span className="pz-hero__line pz-hero__line--accent">Football IQ</span>
             </h1>
-            <p>
-              Three elite fan challenges — each with distinct Easy, Medium, and Hard experiences.
-              Pick your tier and step onto the pitch.
-            </p>
           </div>
 
           <div className="pz-hero__cta-strip">

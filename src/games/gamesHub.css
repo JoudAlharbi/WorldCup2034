@@ -37,7 +37,7 @@
 
 .pz-hero {
   position: relative;
-  min-height: clamp(280px, 38vh, 420px);
+  min-height: clamp(240px, 32vh, 360px);
   overflow: hidden;
   background: var(--navy-deep);
 }
@@ -82,7 +82,7 @@
   z-index: 1;
   max-width: 1180px;
   margin: 0 auto;
-  padding: clamp(44px, 6vw, 68px) clamp(20px, 4vw, 40px) clamp(48px, 7vw, 72px);
+  padding: clamp(40px, 5.5vw, 60px) clamp(20px, 4vw, 40px) clamp(40px, 6vw, 56px);
 }
 
 .pz-hero h1 {
@@ -118,7 +118,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 18px;
 }
 
 .pz-hero__pill {
