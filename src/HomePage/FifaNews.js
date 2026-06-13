@@ -50,7 +50,7 @@ function FifaNews() {
   const secondary = articles.slice(1, 5);
 
   return (
-    <section className="fn">
+    <section className="fn" id="news-section">
       <div className="fn__head">
         <h2 className="fn__title">Latest FIFA &amp; World Cup News</h2>
         <p className="fn__subtitle">Updates from around the world of football</p>

@@ -1,0 +1,193 @@
+/* Global site footer — FIFA World Cup 2034 Fan Portal */
+
+.site-footer {
+  margin-top: auto;
+  background: linear-gradient(180deg, #0c1f4a 0%, #061538 100%);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.site-footer__accent {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #c9a227 20%,
+    #f0d878 50%,
+    #c9a227 80%,
+    transparent 100%
+  );
+}
+
+.site-footer__main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 2.5rem;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2.5rem 2rem;
+  align-items: start;
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.site-footer__logo {
+  width: 100px;
+  height: auto;
+  display: block;
+}
+
+.site-footer__tagline {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 320px;
+}
+
+.site-footer__heading {
+  margin: 0 0 1.125rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f0d878;
+}
+
+.site-footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.site-footer__links a {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.site-footer__links a:focus-visible {
+  outline: 2px solid #f0d878;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.site-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.site-footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  text-decoration: none;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.site-footer__social-link:hover,
+.site-footer__social-link:focus-visible {
+  background: rgba(201, 162, 39, 0.22);
+  border-color: rgba(240, 216, 120, 0.45);
+  color: #f0d878;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.site-footer__social-link:focus-visible {
+  outline: 2px solid #f0d878;
+  outline-offset: 2px;
+}
+
+.site-footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+}
+
+.site-footer__copyright {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 900px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+    align-items: center;
+    text-align: center;
+  }
+
+  .site-footer__tagline {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-footer__main {
+    padding: 2.25rem 1.25rem 2rem;
+  }
+
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    text-align: center;
+  }
+
+  .site-footer__brand {
+    align-items: center;
+  }
+
+  .site-footer__links {
+    align-items: center;
+  }
+
+  .site-footer__links a:hover,
+  .site-footer__links a:focus-visible {
+    transform: none;
+  }
+
+  .site-footer__social {
+    justify-content: center;
+  }
+}
